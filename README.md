@@ -1,1 +1,1 @@
-# myGoogleMap
+# myGoogleMaps
