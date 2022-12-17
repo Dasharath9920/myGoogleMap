@@ -79,8 +79,14 @@
 .sidebar{
   flex: 1;
   display: flex;
+  align-items: center;
+  flex-direction: column;
   padding: 5px 10px;
   box-shadow: 1px 0px 10px 1px lightgrey;
+}
+
+.sidebar .location_block{
+  display: flex;
 }
 
 .sidebar .location{
@@ -133,4 +139,14 @@
   width: 12px;
   height: 12px;
   border: 1px solid grey;
+}
+
+.button{
+  border: none;
+  background-color: rgb(143, 255, 109);
+  padding: 5px 10px;
+  border-radius: 5px;
+  color: white;
+  font-weight: bold;
+
 }

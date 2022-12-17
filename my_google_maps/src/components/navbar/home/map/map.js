@@ -1,6 +1,11 @@
-import React from 'react'
+import React from 'react';
+import {useSelector, useDispatch} from 'react-redux';
+import actionTypes from '../../../../reducer/actionTypes';
 
 function Map() {
+
+  const myState = useSelector(state => state.updateProperties);
+  const dispatch = useDispatch();
 
   let hash = (i,j) => {
     return 2001*(i+1000)+(j+1000);
@@ -8,11 +13,10 @@ function Map() {
 
   let grid = [];
   
-  const generateGrid = () => {
-    let test = new Set()
-    for(let i = 0; i < 50; i++){
+  const generateGrid = (n,m) => {
+    for(let i = 0; i < n; i++){
         let temp = [];
-        for(let j = 0; j < 100; j++){
+        for(let j = 0; j < m; j++){
             temp.push({
                 r: i,
                 c: j
@@ -20,34 +24,13 @@ function Map() {
         }
         grid.push(temp)
       }
+    dispatch({
+        type: actionTypes.UPDATE_MAP,
+        map: grid
+    });
   }
 
-  const generateCities = (numberOfCities) => {
-    let uniqueCities = new Set()
-    let citiesGenerated = []
-    while(uniqueCities.size < numberOfCities){
-        let r = Math.round(Math.random()*50);
-        let c = Math.round(Math.random()*100);
-        let has = hash(r,c);
-        if(!uniqueCities.has(has)){
-            uniqueCities.add(has);
-            citiesGenerated.push({
-                r: r,
-                c: c
-            })
-        }
-    }
-
-    citiesGenerated.forEach(block => {
-        let key = hash(block.r, block.c);
-        document.getElementById(key).style.backgroundColor='black';
-    })
-  }
-
-  generateGrid();
-  setTimeout(() => {
-      generateCities(10);
-  });
+  generateGrid(50,100);
 
   return (
     <div className='map'>
