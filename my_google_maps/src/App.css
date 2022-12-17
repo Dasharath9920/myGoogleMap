@@ -79,9 +79,44 @@
 .sidebar{
   flex: 1;
   display: flex;
-  flex-direction: column;
   padding: 5px 10px;
   box-shadow: 1px 0px 10px 1px lightgrey;
+}
+
+.sidebar .location{
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  margin: 10px 0px;
+}
+
+.sidebar .location:nth-child(1) .location-icon{
+  color: green;
+}
+
+.sidebar .location:nth-child(2) .location-icon{
+  color:red;
+}
+
+.sidebar .swap-button{
+  margin: 40px 10px;
+  height: 35px;
+  width: 35px;
+  background-color: transparent;
+  border: none;
+  cursor: pointer;
+}
+
+.sidebar input{
+  border: none;
+  outline: none;
+  font-size: .9rem;
+}
+
+.sidebar .location-search{
+  padding: 8px 10px;
+  border: 2px solid lightgrey;
+  border-radius: 10px;
 }
 
 .map{
