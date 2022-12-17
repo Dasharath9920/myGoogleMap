@@ -16,13 +16,14 @@ function Sidebar() {
     return 2001*(i+1000)+(j+1000);
   }
 
-  const generateCities = (numberOfCities) => {
+  const generateCities = () => {
     let uniqueCities = new Set()
     let citiesGenerated = []
-    while(uniqueCities.size < numberOfCities){
-        let r = Math.round(Math.random()*50);
-        let c = Math.round(Math.random()*100);
+    while(uniqueCities.size < 15){
+        let r = Math.round(Math.floor(uniqueCities.size/4)*15 + Math.random()*16);
+        let c = Math.round(Math.floor(uniqueCities.size%5)*20 + Math.random()*20);
         let has = hash(r,c);
+
         if(!uniqueCities.has(has)){
             uniqueCities.add(has);
             citiesGenerated.push({
@@ -37,6 +38,10 @@ function Sidebar() {
         cities: citiesGenerated
     })
   }
+
+  useEffect(() => {
+    generateCities();
+  },[])
 
   const getDirections = () => {
     dispatch({
@@ -57,19 +62,19 @@ function Sidebar() {
                 <div className="location">
                     <PlaceIcon className='location-icon'/>
                     <div  className='location-search'>
-                        <input type="text" placeholder='Choose starting point' value={source} onChange={(e) => setSource(e.target.value)}/>
+                        <input type="text" placeholder='Choose starting point' onChange={(e) => setSource(e.target.value)}/>
                     </div>
                 </div>
                 <div className="location">
                     <PlaceIcon className='location-icon'/>
                     <div className='location-search'>
-                        <input type="text" placeholder='Choose destination' value={destination} onChange={(e) => setDestination(e.target.value)}/>
+                        <input type="text" placeholder='Choose destination' onChange={(e) => setDestination(e.target.value)}/>
                     </div>
                 </div>
             </div>
             <button className='swap-button'><SwapVertIcon className='swap-icon'/></button>
         </div>
-        <button className='button' onClick={generateCities(10)}>Change Cities</button>
+        <button className='button' onClick={generateCities}>Change Cities</button>
     </div>
   )
 }

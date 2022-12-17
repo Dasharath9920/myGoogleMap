@@ -13,11 +13,25 @@ function Map() {
 
   const grid = [...myState.map];
 
+  const resetCities = () => {
+    for(let i = 0; i < 50; i++){
+      for(let j = 0; j < 100; j++){
+        let key = hash(i,j);
+        let cell = document.getElementById(key);
+        if(cell){
+          cell.innerText = '';
+        }
+      }
+    }
+  }
+
   useEffect(() => {
-    myState.cities.forEach(block => {
+    resetCities();
+    myState.cities.forEach((block,index) => {
       let key = hash(block.r, block.c);
-      if(document.getElementById(key)){
-        document.getElementById(key).style.backgroundColor = 'black';
+      let cell = document.getElementById(key);
+      if(cell){
+        cell.innerText = index+1;
       }
     })
   },[myState.cities]);
@@ -29,7 +43,7 @@ function Map() {
             return <div className='map-row' key={key}>
                 {row.map(block => {
                     let has = hash(block.r,block.c);
-                    return <div className="block" id={has} key={has} style={{transform:`translateX(${block.c*11}px)`}}></div>
+                    return <h5 className="block" id={has} key={has} style={{transform:`translateX(${block.c*11}px)`}}></h5>
                 }
                 )}
             </div>  
