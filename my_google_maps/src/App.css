@@ -122,3 +122,15 @@
 .map{
   flex: 5;
 }
+
+.map .map-row{
+  display: flex;
+}
+
+.map .block{
+  margin-right: -10px;
+  margin-bottom: 1px;
+  width: 12px;
+  height: 12px;
+  border: 1px solid grey;
+}

@@ -15,7 +15,7 @@ function Navbar() {
     <div className='navbar'>
       <div className='navbar_content_block'>
         <PlaceIcon className='map-icon'/>
-        <h1><span>M</span>y <span>G</span>oogle <span>M</span>aps</h1>
+        <h1>My G<span>o</span><span>o</span><span>g</span>le Maps</h1>
       </div>
       <div className='navbar_content_block' onClick = {contactHandler}>
         <PhoneIcon className='map-icon'/>
