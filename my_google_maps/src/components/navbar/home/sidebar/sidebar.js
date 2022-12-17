@@ -1,4 +1,4 @@
-import React from 'react'
+import React, {useState, useEffect } from 'react'
 import actionTypes from '../../../../reducer/actionTypes';
 import {useSelector, useDispatch} from 'react-redux';
 import PlaceIcon from '@mui/icons-material/Place';
@@ -8,6 +8,9 @@ function Sidebar() {
 
   const myState = useSelector(state => state.updateProperties);
   const dispatch = useDispatch();
+
+  const [source, setSource] = useState(myState.source);
+  const [destination, setDestination] = useState(myState.destination);
 
   let hash = (i,j) => {
     return 2001*(i+1000)+(j+1000);
@@ -28,11 +31,23 @@ function Sidebar() {
             })
         }
     }
-    
+
     dispatch({
         type: actionTypes.UPDATE_CITIES,
         cities: citiesGenerated
     })
+  }
+
+  const getDirections = () => {
+    dispatch({
+        type: actionTypes.UPDATE_SOURCE,
+        source: source
+    });
+
+    dispatch({
+        type: actionTypes.UPDATE_DESTINATION,
+        destination: destination
+    });
   }
 
   return (
@@ -42,19 +57,19 @@ function Sidebar() {
                 <div className="location">
                     <PlaceIcon className='location-icon'/>
                     <div  className='location-search'>
-                        <input type="text" placeholder='Choose starting point'/>
+                        <input type="text" placeholder='Choose starting point' value={source} onChange={(e) => setSource(e.target.value)}/>
                     </div>
                 </div>
                 <div className="location">
                     <PlaceIcon className='location-icon'/>
                     <div className='location-search'>
-                        <input type="text" placeholder='Choose destination'/>
+                        <input type="text" placeholder='Choose destination' value={destination} onChange={(e) => setDestination(e.target.value)}/>
                     </div>
                 </div>
             </div>
             <button className='swap-button'><SwapVertIcon className='swap-icon'/></button>
         </div>
-        <button className='button' onClick={generateCities}>Change City</button>
+        <button className='button' onClick={generateCities(10)}>Change Cities</button>
     </div>
   )
 }

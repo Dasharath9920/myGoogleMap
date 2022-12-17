@@ -1,4 +1,4 @@
-import React from 'react';
+import React, { useEffect } from 'react';
 import {useSelector, useDispatch} from 'react-redux';
 import actionTypes from '../../../../reducer/actionTypes';
 
@@ -11,26 +11,16 @@ function Map() {
     return 2001*(i+1000)+(j+1000);
   }
 
-  let grid = [];
-  
-  const generateGrid = (n,m) => {
-    for(let i = 0; i < n; i++){
-        let temp = [];
-        for(let j = 0; j < m; j++){
-            temp.push({
-                r: i,
-                c: j
-            })
-        }
-        grid.push(temp)
-      }
-    dispatch({
-        type: actionTypes.UPDATE_MAP,
-        map: grid
-    });
-  }
+  const grid = [...myState.map];
 
-  generateGrid(50,100);
+  useEffect(() => {
+    myState.cities.forEach(block => {
+      let key = hash(block.r, block.c);
+      if(document.getElementById(key)){
+        document.getElementById(key).style.backgroundColor = 'black';
+      }
+    })
+  },[myState.cities]);
 
   return (
     <div className='map'>
