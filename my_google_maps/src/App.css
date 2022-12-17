@@ -105,6 +105,10 @@
   color:red;
 }
 
+.sidebar .location:nth-child(3) .location-icon{
+  color: blue;
+}
+
 .sidebar .swap-button{
   margin: 40px 10px;
   height: 35px;
@@ -142,6 +146,7 @@
   height: 12px;
   background-color: white;
   font-size: .8rem;
+  text-align: center;
 }
 
 .button{
@@ -151,7 +156,7 @@
   padding: 5px 10px;
   border-radius: 5px;
   color: white;
-  transition: .3s ease all;
+  transition: .1s ease all;
   font-weight: bold;
   cursor: pointer;
   letter-spacing: 1px;
@@ -159,4 +164,17 @@
 
 .button:hover{
   background-color: rgb(0, 144, 0);
+}
+
+.direction-button{
+  padding: 10px 20px;
+  font-size: .9rem;
+  background-color: rgb(30, 130, 224);
+  margin: 10px 10px;
+  width: 100%;
+  border-radius: 10px;
+}
+
+.direction-button:hover{
+  background-color: blue;
 }

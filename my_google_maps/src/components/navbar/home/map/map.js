@@ -20,6 +20,7 @@ function Map() {
         let cell = document.getElementById(key);
         if(cell){
           cell.innerText = '';
+          cell.style.backgroundColor = 'white';
         }
       }
     }
@@ -32,6 +33,7 @@ function Map() {
       let cell = document.getElementById(key);
       if(cell){
         cell.innerText = index+1;
+        cell.style.backgroundColor = 'rgb(237, 239, 184)';
       }
     })
   },[myState.cities]);
