@@ -1,5 +1,5 @@
 import React, { useEffect } from 'react';
-import {useSelector, useDispatch} from 'react-redux'
+import {useDispatch} from 'react-redux'
 import Sidebar from './sidebar/sidebar';
 import Map from './map/map';
 import actionTypes from '../../../reducer/actionTypes';
@@ -11,7 +11,7 @@ function Home() {
     let grid = [];
     for(let i = 0; i < 50; i++){
         let temp = [];
-        for(let j = 0; j < 100; j++){
+        for(let j = 0; j < 90; j++){
             temp.push({
                 r: i,
                 c: j

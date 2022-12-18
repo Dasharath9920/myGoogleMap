@@ -4,6 +4,7 @@ import {useSelector, useDispatch} from 'react-redux';
 import PlaceIcon from '@mui/icons-material/Place';
 import SwapVertIcon from '@mui/icons-material/SwapVert';
 import MapIcon from '@mui/icons-material/Map';
+import DirectionsIcon from '@mui/icons-material/Directions';
 
 function Sidebar() {
 
@@ -20,14 +21,15 @@ function Sidebar() {
   const generateCities = () => {
     let uniqueCities = new Set()
     let citiesGenerated = []
-    while(uniqueCities.size < 15){
-        let r = Math.round(Math.floor(uniqueCities.size/4)*15 + Math.random()*16);
-        let c = Math.round(Math.floor(uniqueCities.size%5)*20 + Math.random()*20);
+    while(uniqueCities.size < 40){
+        let r = Math.floor(Math.floor(uniqueCities.size/8)*10 + Math.random()*10);
+        let c = Math.floor((uniqueCities.size%8)*11 + Math.random()*13);
         let has = hash(r,c);
 
         if(!uniqueCities.has(has)){
             uniqueCities.add(has);
             citiesGenerated.push({
+                cityName: uniqueCities.size,
                 r: r,
                 c: c
             })
@@ -50,8 +52,8 @@ function Sidebar() {
     try{
         let src = Number(source);
         let dest = Number(destination);
-        if(src > 12 || dest > 12){
-            throw new Error;
+        if(src > 40 || dest > 40){
+            throw new Error();
         }
         dispatch({
             type: actionTypes.UPDATE_SOURCE,
@@ -62,12 +64,21 @@ function Sidebar() {
             type: actionTypes.UPDATE_DESTINATION,
             destination: dest
         });
+
+        dispatch({
+            type: actionTypes.UPDATE_PLAY,
+            play: true
+        })
     } catch(e){
         window.alert('Invalid cities. Please choose cities from the map');
         setSource('');
         setDestination('');
     }
-}
+  }
+
+  const startNavigation = () => {
+
+  }
 
   useEffect(() => {
     generateCities();
@@ -92,6 +103,9 @@ function Sidebar() {
                 <div className="location">
                     <MapIcon className='location-icon'/>
                     <button className='button direction-button' onClick={getDirections}>Get Directions</button>
+                </div>
+                <div className="location">
+                    <button className='button start-button' onClick={startNavigation}><DirectionsIcon className='location-icon'/> Start Navigation</button>
                 </div>
             </div>
             <button className='swap-button' onClick={swapLocations}><SwapVertIcon className='swap-icon'/></button>

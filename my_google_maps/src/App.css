@@ -105,10 +105,6 @@
   color:red;
 }
 
-.sidebar .location:nth-child(3) .location-icon{
-  color: blue;
-}
-
 .sidebar .swap-button{
   margin: 40px 10px;
   height: 35px;
@@ -130,9 +126,14 @@
   border-radius: 10px;
 }
 
-.map{
+.map-container{
   flex: 5;
   background-color: rgb(218, 230, 192);
+}
+
+.map{
+  width: 100%;
+  height: 100%;
 }
 
 .map .map-row{
@@ -142,10 +143,9 @@
 .map .block{
   margin-right: -10px;
   margin-bottom: 1px;
-  width: 12px;
-  height: 12px;
-  background-color: white;
-  font-size: .8rem;
+  width: 15px;
+  height: 15px;
+  font-size: .9rem;
   text-align: center;
 }
 
@@ -153,21 +153,22 @@
   margin-top: 30px;
   border: none;
   background-color: rgb(5, 163, 76);
-  padding: 5px 10px;
+  padding: 12px 20px;
   border-radius: 5px;
   color: white;
   transition: .1s ease all;
   font-weight: bold;
   cursor: pointer;
   letter-spacing: 1px;
+  font-size: 1.2rem;
 }
 
 .button:hover{
   background-color: rgb(0, 144, 0);
 }
 
-.direction-button{
-  padding: 10px 20px;
+.start-button, .direction-button{
+  padding: 12px 20px;
   font-size: .9rem;
   background-color: rgb(30, 130, 224);
   margin: 10px 10px;
@@ -175,6 +176,15 @@
   border-radius: 10px;
 }
 
-.direction-button:hover{
+.start-button{
+  margin-top: 20px;
+  padding: 15px 25px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 1.2rem;
+}
+
+.direction-button:hover, .start-button:hover{
   background-color: blue;
 }
