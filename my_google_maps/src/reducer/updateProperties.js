@@ -11,7 +11,10 @@ const initializer = {
     },
     map: [],
     cities: [],
-    play: false
+    roads: new Set(),
+    path: [],
+    navigate: false,
+    findPath: false,
 };
 
 const updateProperties = (state=initializer, action) => {
@@ -24,12 +27,24 @@ const updateProperties = (state=initializer, action) => {
             return {...state, destination: action.destination};
         }
 
-        case actionTypes.UPDATE_PLAY:{
-            return {...state, play: action.play};
+        case actionTypes.UPDATE_FINDPATH:{
+            return {...state, findPath: action.findPath};
+        }
+
+        case actionTypes.UPDATE_NAVIGATE:{
+            return {...state, navigate: action.navigate};
         }
 
         case actionTypes.UPDATE_SOURCE:{
             return {...state, source: action.source};
+        }
+
+        case actionTypes.UPDATE_ROADS:{
+            return {...state, roads: action.roads};
+        }
+
+        case actionTypes.UPDATE_SHORTESTPATH: {
+            return {...state, path: action.path};
         }
 
         case actionTypes.UPDATE_MAP:{

@@ -2,6 +2,7 @@ import React, { useEffect } from 'react';
 import {useDispatch} from 'react-redux'
 import Sidebar from './sidebar/sidebar';
 import Map from './map/map';
+import PathFinder from './pathFinder';
 import actionTypes from '../../../reducer/actionTypes';
 
 function Home() {
@@ -34,6 +35,7 @@ function Home() {
     <div className='home'>
         <Sidebar />
         <Map />
+        <PathFinder />
     </div>
   )
 }

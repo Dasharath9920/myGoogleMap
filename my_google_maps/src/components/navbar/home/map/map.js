@@ -1,9 +1,11 @@
 import React, { useEffect } from 'react';
-import {useSelector} from 'react-redux';
+import {useSelector, useDispatch} from 'react-redux';
+import actionTypes from '../../../../reducer/actionTypes';
 
 function Map() {
 
   const myState = useSelector(state => state.updateProperties);
+  const dispatch = useDispatch();
 
   let hash = (i,j) => {
     return 2001*(i+1000)+(j+1000);
@@ -66,6 +68,7 @@ function Map() {
     }
     let block = document.getElementById(key);
     block.style.backgroundColor = 'grey';
+    roads.add(key);
   }
 
   const hasNearByRoad = (roads,row,col,blocksVisited) => {
@@ -131,6 +134,11 @@ function Map() {
       let nextCity = city.cityName === 40? 1: city.cityName + 1;
       city = myState.cities.find(currentCity => currentCity.cityName === nextCity);
     }
+
+    dispatch({
+      type: actionTypes.UPDATE_ROADS,
+      roads: roads
+    });
   }
 
   useEffect(() => {

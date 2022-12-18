@@ -52,9 +52,11 @@ function Sidebar() {
     try{
         let src = Number(source);
         let dest = Number(destination);
-        if(src > 40 || dest > 40){
+
+        if(!src || !dest || source.length === 0 || destination.length === 0 || src > 40 || dest > 40){
             throw new Error();
         }
+
         dispatch({
             type: actionTypes.UPDATE_SOURCE,
             source: src
@@ -66,8 +68,8 @@ function Sidebar() {
         });
 
         dispatch({
-            type: actionTypes.UPDATE_PLAY,
-            play: true
+            type: actionTypes.UPDATE_FINDPATH,
+            findPath: true
         })
     } catch(e){
         window.alert('Invalid cities. Please choose cities from the map');
