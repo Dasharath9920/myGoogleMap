@@ -11,6 +11,7 @@ function PathFinder() {
   const roads = myState.roads;
   const x_dir = [-1,-1,-1,0,0,1,1,1];
   const y_dir = [-1,0,1,-1,1,-1,0,1];
+  let count = 0,count2 = 0;
 
   let hash = (i,j) => {
     return 2001*(i+1000)+(j+1000);
@@ -36,7 +37,9 @@ function PathFinder() {
   }
 
   const calculateHeuristicValue = (r,c) => {
-    return (destination.r - r)*(destination.r - r) + (destination.c - c)*(destination.c - c);
+    let dx = Math.abs(destination.r - r), dy = Math.abs(destination.c - c);
+    let d = Math.sqrt(2);
+    return dx + dy + (d-2)*Math.min(dx,dy);
   }
 
   const buildPath = (parentBlocks) => {
@@ -51,8 +54,14 @@ function PathFinder() {
         col = parentBlock.c;
 
     }while(row !== source.r || col !== source.c);
+    path.push({r: source.r, c: source.c});
 
-    path.forEach(city => document.getElementById(hash(city.r, city.c)).style.backgroundColor = 'green');
+    path.forEach(city => {
+      setTimeout(() => {
+        document.getElementById(hash(city.r, city.c)).style.backgroundColor = 'green'
+      },count*20+count2*10);
+      count2++;
+    });
 
     path.reverse();
     dispatch({
@@ -80,7 +89,6 @@ function PathFinder() {
         c: source.c
     });
     visitedBlocks.add(hash(source.r, source.c));
-    let count = 0,count2 = 0;
 
     while(blocks.length > 0){
         let currentBlock = blocks.shift();
@@ -91,6 +99,11 @@ function PathFinder() {
             let hashKey = hash(newRow, newCol);
 
             if(isSafeToConstruct(newRow, newCol) && isRoadOrCity(newRow, newCol)){
+              setTimeout(() => {
+                document.getElementById(hash(currentBlock.r, currentBlock.c)).style.backgroundColor = 'grey';
+              },count*20)
+              count++;
+
                 if(isACityWithCoordinates(newRow, newCol)){
                     if(newRow === destination.r && newCol === destination.c){
                         parentBlocks[hashKey] = {r: currentBlock.r, c: currentBlock.c};
@@ -123,8 +136,11 @@ function PathFinder() {
                       });
                 }
             }
-        }
+      }
     }
+    setTimeout(() => {
+      window.alert("Sorry. Destination can't be reached");
+    },count*20);
   }
 
   useEffect(() => {

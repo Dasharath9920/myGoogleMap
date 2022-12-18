@@ -59,7 +59,7 @@ function Map() {
     let key = hash(row,col);
     while(parentBlocks[key].r !== source.r || parentBlocks[key].c !== source.c){
       let block = document.getElementById(key);
-      block.style.backgroundColor = 'grey';
+      block.style.backgroundColor = 'lightgrey';
 
       roads.add(key);
       row = parentBlocks[key].r;
@@ -67,7 +67,7 @@ function Map() {
       key = hash(row,col);
     }
     let block = document.getElementById(key);
-    block.style.backgroundColor = 'grey';
+    block.style.backgroundColor = 'lightgrey';
     roads.add(key);
   }
 
@@ -94,7 +94,7 @@ function Map() {
     });
     blocksVisited.add(hash(city.r, city.c));
 
-    while(connectedCities[city.cityName].length < 3 && grid.length > 0){
+    while(connectedCities[city.cityName].length < 2 && grid.length > 0){
       let currentBlock = grid.shift();
 
       for(let k = Math.floor(Math.random()*8), count = 0; count < 8; count++, k = (k+1)%8){
