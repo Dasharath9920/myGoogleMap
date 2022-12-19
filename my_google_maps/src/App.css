@@ -105,8 +105,16 @@
   color:red;
 }
 
-.sidebar .swap-button{
-  margin: 40px 10px;
+.sidebar .more-icon{
+  color: grey;
+}
+
+.sidebar .swap-icon{
+  font-size:xx-large;
+}
+
+.sidebar #swap-button{
+  margin: 90px 10px;
   height: 35px;
   width: 35px;
   background-color: transparent;
@@ -150,16 +158,43 @@
 }
 
 .button{
-  margin-top: 30px;
   border: none;
   background-color: rgb(5, 163, 76);
-  padding: 12px 20px;
+  padding: 10px 15px;
   border-radius: 5px;
   color: white;
   transition: .1s ease all;
   font-weight: bold;
   cursor: pointer;
   letter-spacing: 1px;
+  font-size: 1.2rem;
+}
+
+.stops{
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.stop-button{
+  padding: 5px 10px;
+  font-size: .9rem;
+  width: 60px;
+}
+
+.stops-container{
+  width: 100%;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding: 8px 10px 8px 20px;
+}
+
+.stops-input{
+  width: 70px;
+  margin: 0px 4px;
+  border-bottom: 1px solid grey;
+  padding-left: 5px;
   font-size: 1.2rem;
 }
 
@@ -177,7 +212,7 @@
 }
 
 .start-button{
-  margin-top: 20px;
+  margin: 40px 0px;
   padding: 15px 25px;
   display: flex;
   align-items: center;

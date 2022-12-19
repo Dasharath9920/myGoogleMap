@@ -6,7 +6,8 @@ const actionTypes = {
     'UPDATE_SOURCE': 'updateSource',
     'UPDATE_DESTINATION': 'updateDestination',
     'UPDATE_SHORTESTPATH': 'updateShortestPath',
-    'UPDATE_ROADS': 'updateRoads'
+    'UPDATE_ROADS': 'updateRoads',
+    'UPDATE_STOPS': 'updateStops'
 }
 
 export default actionTypes;

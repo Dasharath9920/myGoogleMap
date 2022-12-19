@@ -51,7 +51,7 @@ function PathFinder() {
     }
   }
 
-  const buildPath = (parentBlocks) => {
+  const buildPath = (parentBlocks, source, destination) => {
     let path = [];
     let row = destination.r, col = destination.c;
     do{
@@ -78,17 +78,19 @@ function PathFinder() {
       resetSearchedBlocks();
     },count*20 + count2*20)
 
-    setTimeout(() => {
-      window.alert(`Estimated time: ${path.length} sec`);
-    },count*20 + count2*20 + 100)
+    // setTimeout(() => {
+    //   window.alert(`Estimated time: ${path.length} sec`);
+    // },count*20 + count2*20 + 100)
 
-    dispatch({
-        type: actionTypes.UPDATE_SHORTESTPATH,
-        path: path
-    })
+    // dispatch({
+    //     type: actionTypes.UPDATE_SHORTESTPATH,
+    //     path: path
+    // })
   }
 
-  const findPath = () => {
+  const findPath =  (sourceCity, destinationCity) => {
+    let source = getCityFromCityName(sourceCity);
+    let destination = getCityFromCityName(destinationCity);
     let blocks = [];
     let visitedBlocks = new Set(), cost = {};
     let parentBlocks = {};
@@ -118,15 +120,18 @@ function PathFinder() {
 
             if(isSafeToConstruct(newRow, newCol) && isRoadOrCity(newRow, newCol)){
               setTimeout(() => {
-                if(currentBlock.r !== source.r && currentBlock.c !== source.c)
-                  document.getElementById(hash(currentBlock.r, currentBlock.c)).style.backgroundColor = 'grey';
+                if(currentBlock.r !== source.r && currentBlock.c !== source.c && !isACityWithCoordinates(currentBlock.r, currentBlock.c)){
+                  if(document.getElementById(hash(currentBlock.r, currentBlock.c)).style.backgroundColor !== 'blue'){
+                    document.getElementById(hash(currentBlock.r, currentBlock.c)).style.backgroundColor = 'grey';
+                  }
+                }
               },count*20)
               count++;
 
                 if(isACityWithCoordinates(newRow, newCol)){
                     if(newRow === destination.r && newCol === destination.c){
                         parentBlocks[hashKey] = {r: currentBlock.r, c: currentBlock.c};
-                        buildPath(parentBlocks);
+                        buildPath(parentBlocks,source, destination);
                         return;
                     }
                 }
@@ -162,6 +167,17 @@ function PathFinder() {
     },count*20);
   }
 
+  const findShortestPath = async () => {
+    let stops = [...myState.stops];
+    
+    stops.unshift(myState.source);
+    stops.push(myState.destination);
+
+    for(let i = 1; i < stops.length; i++){
+      findPath(stops[i-1],stops[i]);
+    }
+  }
+
   useEffect(() => {
     if(myState.findPath){
       let sourceBlock = document.getElementById(hash(source.r, source.c));
@@ -169,7 +185,7 @@ function PathFinder() {
       sourceBlock.style.backgroundColor = 'green';
       destinationBlock.style.backgroundColor = 'red';
 
-      findPath();
+      findShortestPath();
 
       dispatch({
           type: actionTypes.UPDATE_FINDPATH,

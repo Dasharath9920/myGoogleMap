@@ -11,8 +11,9 @@ const initializer = {
     },
     map: [],
     cities: [],
-    roads: new Set(),
     path: [],
+    stops: [],
+    roads: new Set(),
     navigate: false,
     findPath: false,
 };
@@ -49,6 +50,10 @@ const updateProperties = (state=initializer, action) => {
 
         case actionTypes.UPDATE_MAP:{
             return {...state, map: action.map};
+        }
+
+        case actionTypes.UPDATE_STOPS:{
+            return {...state, stops: action.stops};
         }
 
         default:
