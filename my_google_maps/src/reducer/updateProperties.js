@@ -32,10 +32,6 @@ const updateProperties = (state=initializer, action) => {
             return {...state, findPath: action.findPath};
         }
 
-        case actionTypes.UPDATE_NAVIGATE:{
-            return {...state, navigate: action.navigate};
-        }
-
         case actionTypes.UPDATE_SOURCE:{
             return {...state, source: action.source};
         }

@@ -15,13 +15,26 @@ function Sidebar() {
   const [source, setSource] = useState('');
   const [destination, setDestination] = useState('');
   const [stop, setStop] = useState('');
+  const [playNavigation, setPlayNavigation] = useState(false);
+  const [disableNavigation, setDisableNavigation] = useState(true);
+  const [disableDirection, setDisableDirection] = useState(false);
   let stops = [...myState.stops];
 
   let hash = (i,j) => {
     return 2001*(i+1000)+(j+1000);
   }
 
+  const isACityWithCoordinates = (row, col) => {
+    return myState.cities.some(city => city.r === row && city.c === col);
+  }
+
   const generateCities = () => {
+    if(playNavigation)
+        return;
+
+    setDisableNavigation(true);
+    setDisableDirection(false);
+
     let uniqueCities = new Set()
     let citiesGenerated = []
     while(uniqueCities.size < 40){
@@ -52,6 +65,9 @@ function Sidebar() {
   }
   
   const getDirections = () => {
+    if(disableDirection)
+        return;
+
     try{
         let src = Number(source);
         let dest = Number(destination);
@@ -59,6 +75,12 @@ function Sidebar() {
         if(!src || !dest || source.length === 0 || destination.length === 0 || src > 40 || dest > 40){
             throw new Error();
         }
+
+        if(playNavigation)
+            return;
+
+        setPlayNavigation(true);
+        setDisableDirection(true);
 
         dispatch({
             type: actionTypes.UPDATE_SOURCE,
@@ -82,34 +104,61 @@ function Sidebar() {
   }
 
   const startNavigation = () => {
+    if(disableNavigation)
+        return;
+    
+    setDisableNavigation(true);
+    setPlayNavigation(true);
 
+    let count = 0;
+    myState.path.forEach(city => {
+        setTimeout(() => {
+          document.getElementById(hash(city.r, city.c)).style.backgroundColor = 'red';
+          setTimeout(() => {
+            document.getElementById(hash(city.r, city.c)).style.backgroundColor = isACityWithCoordinates(city.r,city.c)? 'yellow': 'blue';
+          },100);
+        },count*50);
+        count++;
+      });
+
+    setTimeout(() => {
+        setPlayNavigation(false);
+    },count*50);
   }
 
   const addStop = () => {
-    if(stops.length > 10){
-        window.alert('Maximum 10 stops are allowed');
+      if(disableDirection)
         return;
-    }
-    try{
+
+      try{
+        if(stops.length > 10){
+            throw new Error('Maximum 10 stops are allowed');
+        }
+
         let stopPoint = Number(stop);
         if(!stopPoint || stop.length === 0 || stop > 40){
-            throw new Error();
+            throw new Error('Invalid stop. Please choose cities from the map');
+        }
+
+        if(stops.some(currentStop => currentStop === stopPoint) || (source && stopPoint === Number(source)) || (destination && stopPoint === Number(destination))){
+            throw new Error('Stop already exist');
         }
 
         stops.push(stopPoint);
-
         dispatch({
             type: actionTypes.UPDATE_STOPS,
             stops: stops
         })
-
         setStop('');
     }catch(e){
-        window.alert('Invalid stop. Please choose cities from the map');
+        window.alert(e);
     }
   }
 
   const resetStops = () => {
+    if(disableDirection)
+        return;
+        
     dispatch({
         type: actionTypes.UPDATE_STOPS,
         stops: []
@@ -120,12 +169,22 @@ function Sidebar() {
     generateCities();
   },[])
 
+  useEffect(() => {
+    if(myState.path.length === 0){
+        setDisableNavigation(true);
+    }
+    else{
+        setDisableNavigation(false);
+        setPlayNavigation(false);
+    }
+  },[myState.path]);
+
   return (
     <div className='sidebar'>
         <div className="location_block">
             <div className="locations_container">
                 <div className="location">
-                    <PlaceIcon className='location-icon'/>
+                    <PlaceIcon className='source-icon'/>
                     <div  className='location-search'>
                         <input type="text" placeholder='Choose starting point' value={source} onChange={(e) => setSource(e.target.value)}/>
                     </div>
@@ -148,7 +207,7 @@ function Sidebar() {
                 </div>
 
                 <div className="location">
-                    <PlaceIcon className='location-icon'/>
+                    <PlaceIcon className='destination-icon'/>
                     <div className='location-search'>
                         <input type="text" placeholder='Choose destination' value={destination} onChange={(e) => setDestination(e.target.value)}/>
                     </div>
@@ -158,22 +217,20 @@ function Sidebar() {
                     <div className="stops-input">
                         <input type="text" placeholder='stop point' value={stop} onChange={e => setStop(e.target.value)}/>
                     </div>
-                    <button className='button stop-button' onClick={addStop}>Add</button>
-                    <button className='button stop-button' onClick={resetStops}>Reset</button>
+                    <button className={`button stop-button ${disableDirection && 'disable-button'}`} onClick={addStop}>Add</button>
+                    <button className={`button stop-button ${disableDirection && 'disable-button'}`} onClick={resetStops}>Reset</button>
                 </div>
 
                 <div className="location">
                     <MapIcon className='location-icon'/>
-                    <button className='button direction-button' onClick={getDirections}>Get Directions</button>
-                </div>
-                
-                <div className="location">
-                    <button className='button start-button' onClick={startNavigation}><DirectionsIcon className='location-icon'/> Start Navigation</button>
+                    <button className={`direction-button ${disableDirection && 'disable-direction-button'}`} onClick={getDirections}>Get Directions</button>
                 </div>
             </div>
             <button id='swap-button' onClick={swapLocations}><SwapVertIcon className='swap-icon'/></button>
         </div>
-        <button className='button' onClick={generateCities}>Change Cities</button>
+        
+        <button className={`button start-button ${disableNavigation && 'disable-button'}`} onClick={startNavigation}><DirectionsIcon className='location-icon'/> Start Navigation</button>
+        <button className={`button start-button ${playNavigation && 'disable-button'}`} onClick={generateCities}>New Map</button>
     </div>
   )
 }
