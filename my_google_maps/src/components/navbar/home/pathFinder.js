@@ -1,5 +1,4 @@
-import { TableSortLabel } from '@mui/material';
-import React, {useState, useEffect} from 'react';
+import React, {useEffect} from 'react';
 import {useSelector, useDispatch} from 'react-redux';
 import actionTypes from '../../../reducer/actionTypes';
 
@@ -7,7 +6,6 @@ function PathFinder() {
 
   const myState = useSelector(state => state.updateProperties);
   const dispatch = useDispatch();
-  const map = [...myState.map];
   const roads = myState.roads;
   const x_dir = [-1,-1,-1,0,0,1,1,1];
   const y_dir = [-1,0,1,-1,1,-1,0,1];
@@ -42,6 +40,17 @@ function PathFinder() {
     return dx + dy + (d-2)*Math.min(dx,dy);
   }
 
+  const resetSearchedBlocks = () => {
+    for(let i = 0; i < 50; i++){
+      for(let j = 0; j < 90; j++){
+        let hashKey = hash(i,j);
+        let block = document.getElementById(hashKey);
+        if(block.style.backgroundColor === 'grey')
+          block.style.backgroundColor = 'lightgrey';
+      }
+    }
+  }
+
   const buildPath = (parentBlocks) => {
     let path = [];
     let row = destination.r, col = destination.c;
@@ -54,16 +63,25 @@ function PathFinder() {
         col = parentBlock.c;
 
     }while(row !== source.r || col !== source.c);
-    path.push({r: source.r, c: source.c});
+
+    path.shift();
+    path.reverse();
 
     path.forEach(city => {
       setTimeout(() => {
-        document.getElementById(hash(city.r, city.c)).style.backgroundColor = 'green'
-      },count*20+count2*10);
+        document.getElementById(hash(city.r, city.c)).style.backgroundColor = isACityWithCoordinates(city.r,city.c)? 'yellow': 'blue';
+      },count*20+count2*20);
       count2++;
     });
 
-    path.reverse();
+    setTimeout(() => {
+      resetSearchedBlocks();
+    },count*20 + count2*20)
+
+    setTimeout(() => {
+      window.alert(`Estimated time: ${path.length} sec`);
+    },count*20 + count2*20 + 100)
+
     dispatch({
         type: actionTypes.UPDATE_SHORTESTPATH,
         path: path
@@ -100,7 +118,8 @@ function PathFinder() {
 
             if(isSafeToConstruct(newRow, newCol) && isRoadOrCity(newRow, newCol)){
               setTimeout(() => {
-                document.getElementById(hash(currentBlock.r, currentBlock.c)).style.backgroundColor = 'grey';
+                if(currentBlock.r !== source.r && currentBlock.c !== source.c)
+                  document.getElementById(hash(currentBlock.r, currentBlock.c)).style.backgroundColor = 'grey';
               },count*20)
               count++;
 
@@ -145,12 +164,17 @@ function PathFinder() {
 
   useEffect(() => {
     if(myState.findPath){
-        findPath();
+      let sourceBlock = document.getElementById(hash(source.r, source.c));
+      let destinationBlock = document.getElementById(hash(destination.r, destination.c));
+      sourceBlock.style.backgroundColor = 'green';
+      destinationBlock.style.backgroundColor = 'red';
 
-        dispatch({
-            type: actionTypes.UPDATE_FINDPATH,
-            findPath: false
-        })
+      findPath();
+
+      dispatch({
+          type: actionTypes.UPDATE_FINDPATH,
+          findPath: false
+      })
     }
   },[myState.findPath])
 

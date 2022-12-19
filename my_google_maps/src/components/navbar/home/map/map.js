@@ -13,7 +13,7 @@ function Map() {
 
   const grid = [...myState.map];
   const x_dir = [-1,0,0,1,-1,-1,1,1];
-  const y_dir = [0,-1,1,0,-1,-1,1,1];
+  const y_dir = [0,-1,1,0,-1,-1,-1,1];
 
   const resetCities = () => {
     for(let i = 0; i < 50; i++){
