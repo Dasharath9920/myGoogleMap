@@ -1,6 +1,7 @@
 import React, { useEffect } from 'react';
 import {useSelector, useDispatch} from 'react-redux';
 import actionTypes from '../../../../reducer/actionTypes';
+import NavigationIcon from '@mui/icons-material/Navigation';
 
 function Map() {
 
@@ -160,6 +161,7 @@ function Map() {
               </div>  
           })}
         </div>
+        <NavigationIcon id="navigation-icon"/>
     </div>
   )
 }

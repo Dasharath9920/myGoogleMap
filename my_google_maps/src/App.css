@@ -137,6 +137,7 @@
 .map-container{
   flex: 5;
   background-color: rgb(218, 230, 192);
+  position: relative;
 }
 
 .map{
@@ -149,6 +150,7 @@
 }
 
 .map .block{
+  display: inline-block;
   margin-right: -10px;
   margin-bottom: 1px;
   width: 15px;
@@ -252,4 +254,14 @@
   background-color: white;
   border-color: lightgrey;
   color: grey;
+}
+
+#navigation-icon{
+  color: blue;
+  position: absolute;
+  left: 0;
+  top: 0;
+  font-size: xx-large;
+  display: none;
+  transition: .2s linear all;
 }

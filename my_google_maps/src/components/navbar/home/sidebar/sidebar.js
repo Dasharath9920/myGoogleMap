@@ -80,6 +80,7 @@ function Sidebar() {
 
     setDisableNavigation(true);
     setDisableDirection(false);
+    document.getElementById('navigation-icon').style.display = 'none';
 
     let uniqueCities = new Set()
     let citiesGenerated = []
@@ -176,10 +177,11 @@ function Sidebar() {
     myState.path.forEach(city => {
         setTimeout(() => {
           document.getElementById(hash(city.r, city.c)).style.backgroundColor = 'red';
+          document.getElementById('navigation-icon').style.transform = `translate(${city.c*16 - 8}px, ${city.r*16 - 8}px)`;
           setTimeout(() => {
-            document.getElementById(hash(city.r, city.c)).style.backgroundColor = isACityWithCoordinates(city.r,city.c)? 'yellow': 'blue';
+            document.getElementById(hash(city.r, city.c)).style.backgroundColor = isACityWithCoordinates(city.r,city.c)? 'yellow': 'lightgreen';
           },100);
-        },count*50);
+        },count*150);
         count++;
       });
 
@@ -232,12 +234,19 @@ function Sidebar() {
   },[])
 
   useEffect(() => {
+    console.log("path updated")
     if(myState.path.length === 0){
         setDisableNavigation(true);
+        setPlayNavigation(false);
     }
     else{
         setDisableNavigation(false);
         setPlayNavigation(false);
+
+        let sourceCity = getCityFromCityName(source);
+        let r = sourceCity.r, c = sourceCity.c;
+        document.getElementById('navigation-icon').style.display = 'block';
+        document.getElementById('navigation-icon').style.transform = `translate(${c*16 - 8}px, ${r*16 - 8}px)`;
     }
   },[myState.path]);
 

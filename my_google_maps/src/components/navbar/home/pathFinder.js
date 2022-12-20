@@ -6,6 +6,7 @@ function PathFinder() {
 
   const myState = useSelector(state => state.updateProperties);
   const dispatch = useDispatch();
+
   const roads = myState.roads;
   const x_dir = [-1,-1,-1,0,0,1,1,1];
   const y_dir = [-1,0,1,-1,1,-1,0,1];
@@ -142,8 +143,13 @@ function PathFinder() {
             }
       }
     }
+	
     setTimeout(() => {
-      window.alert("Sorry. Destination can't be reached");
+		dispatch({
+		  type: actionTypes.UPDATE_SHORTESTPATH,
+		  path: []
+		});
+		window.alert("Sorry. Destination can't be reached");
       return false;
     },count*5);
   }
@@ -154,7 +160,10 @@ function PathFinder() {
     stops.unshift(myState.source);
     stops.push(myState.destination);
 
-    for(let i = 1; i < stops.length && findPath(stops[i-1],stops[i]); i++);
+	let i = 1;
+    for(; i < stops.length && findPath(stops[i-1],stops[i]); i++);
+	if(i < stops.length)
+		return;
 
     path.reverse();
 
