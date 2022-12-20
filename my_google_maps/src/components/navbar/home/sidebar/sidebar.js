@@ -20,12 +20,58 @@ function Sidebar() {
   const [disableDirection, setDisableDirection] = useState(false);
   let stops = [...myState.stops];
 
-  let hash = (i,j) => {
+  const hash = (i,j) => {
     return 2001*(i+1000)+(j+1000);
   }
 
   const isACityWithCoordinates = (row, col) => {
     return myState.cities.some(city => city.r === row && city.c === col);
+  }
+
+  const getCityFromCityName = (cityName,cities = myState.cities) => {
+    return cities.find(currentCity => currentCity.cityName === cityName);
+  }
+
+  const isCityValid = (cityName) => {
+    let city;
+    try{
+        city = Number(cityName);
+
+        if(!city || cityName.length === 0 || city > 40){
+            throw new Error();
+        }
+    } catch(e){
+        city = undefined;
+    };
+
+    return city;
+  }
+
+  const changeSourceOrDestination = (city, stopType,cities = myState.cities) => {
+      let cityName = isCityValid(city) || '';
+      
+      if(cityName || city.length === 0){
+          let city = getCityFromCityName(cityName,cities);
+
+          if(stopType === 'source'){
+              if(source){
+                let sourceCity = getCityFromCityName(source,cities);
+                document.getElementById(hash(sourceCity.r, sourceCity.c)).style.backgroundColor = 'yellow';
+              }
+              setSource(cityName);
+              if(city)
+                document.getElementById(hash(city.r, city.c)).style.backgroundColor = 'green';
+          }
+          else if(stopType === 'destination'){
+            if(destination){
+                let destinationCity = getCityFromCityName(destination,cities);
+                document.getElementById(hash(destinationCity.r, destinationCity.c)).style.backgroundColor = 'yellow';
+              }
+              setDestination(cityName);
+              if(city)
+                document.getElementById(hash(city.r, city.c)).style.backgroundColor = 'red';
+          }
+      }
   }
 
   const generateCities = () => {
@@ -56,6 +102,11 @@ function Sidebar() {
         type: actionTypes.UPDATE_CITIES,
         cities: citiesGenerated
     })
+
+    setTimeout((cities = citiesGenerated) => {
+        changeSourceOrDestination(source,'source',cities);
+        changeSourceOrDestination(destination,'destination',cities);
+    })
   }
 
   const swapLocations = () => {
@@ -71,14 +122,8 @@ function Sidebar() {
     if(disableDirection)
         return;
 
-    try{
-        let src = Number(source);
-        let dest = Number(destination);
-
-        if(!src || !dest || source.length === 0 || destination.length === 0 || src > 40 || dest > 40){
-            throw new Error();
-        }
-
+    let src = isCityValid(source), dest = isCityValid(destination);
+    if(src && dest){
         if(playNavigation)
             return;
 
@@ -99,7 +144,8 @@ function Sidebar() {
             type: actionTypes.UPDATE_FINDPATH,
             findPath: true
         })
-    } catch(e){
+    }
+    else{
         window.alert('Invalid cities. Please choose cities from the map');
         setSource('');
         setDestination('');
@@ -189,7 +235,7 @@ function Sidebar() {
                 <div className="location">
                     <PlaceIcon className='source-icon'/>
                     <div  className='location-search'>
-                        <input type="text" placeholder='Choose starting point' value={source} onChange={(e) => setSource(e.target.value)}/>
+                        <input type="text" placeholder='Choose starting point' value={source} onChange={(e) => changeSourceOrDestination(e.target.value,'source')}/>
                     </div>
                 </div>
 
@@ -212,7 +258,7 @@ function Sidebar() {
                 <div className="location">
                     <PlaceIcon className='destination-icon'/>
                     <div className='location-search'>
-                        <input type="text" placeholder='Choose destination' value={destination} onChange={(e) => setDestination(e.target.value)}/>
+                        <input type="text" placeholder='Choose destination' value={destination} onChange={(e) => changeSourceOrDestination(e.target.value,'destination')}/>
                     </div>
                 </div>
 
