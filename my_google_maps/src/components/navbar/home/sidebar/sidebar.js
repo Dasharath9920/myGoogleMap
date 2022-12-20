@@ -24,6 +24,24 @@ function Sidebar() {
     return 2001*(i+1000)+(j+1000);
   }
 
+  const rotate = (oldRow, oldCol, newRow, newCol) => {
+    if(oldRow < newRow){
+        if(oldCol < newCol)
+            return 135;
+        return oldCol === newCol ? 180: 225;
+    }
+    else if(oldRow === newRow){
+        if(oldCol === newCol)
+            return 0;
+        return oldCol < newCol ? 90: 270;
+    }
+    else{
+        if(oldCol < newCol)
+            return 45;
+        return oldCol === newCol ? 0: 315;
+    }
+  }
+
   const isACityWithCoordinates = (row, col) => {
     return myState.cities.some(city => city.r === row && city.c === col);
   }
@@ -173,21 +191,25 @@ function Sidebar() {
     setDisableNavigation(true);
     setPlayNavigation(true);
 
-    let count = 0;
+    let count = 0,oldRow = source.r,oldCol = source.c;
     myState.path.forEach(city => {
         setTimeout(() => {
-          document.getElementById(hash(city.r, city.c)).style.backgroundColor = 'red';
-          document.getElementById('navigation-icon').style.transform = `translate(${city.c*16 - 8}px, ${city.r*16 - 8}px)`;
-          setTimeout(() => {
-            document.getElementById(hash(city.r, city.c)).style.backgroundColor = isACityWithCoordinates(city.r,city.c)? 'yellow': 'lightgreen';
-          },100);
+
+            let transforms = `translate(${city.c*16 - 8}px, ${city.r*16 - 8}px) rotate(${rotate(oldRow,oldCol,city.r,city.c)}deg)`;
+            document.getElementById('navigation-icon').style.transform = transforms;
+
+            oldRow = city.r;
+            oldCol = city.c;
+            setTimeout(() => {
+                document.getElementById(hash(city.r, city.c)).style.backgroundColor = isACityWithCoordinates(city.r,city.c)? 'yellow': 'lightgreen';
+            },100);
         },count*150);
         count++;
       });
 
     setTimeout(() => {
         setPlayNavigation(false);
-    },count*50);
+    },count*150);
   }
 
   const addStop = () => {
@@ -234,7 +256,6 @@ function Sidebar() {
   },[])
 
   useEffect(() => {
-    console.log("path updated")
     if(myState.path.length === 0){
         setDisableNavigation(true);
         setPlayNavigation(false);

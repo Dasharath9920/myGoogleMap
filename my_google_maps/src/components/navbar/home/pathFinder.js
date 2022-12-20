@@ -105,7 +105,7 @@ function PathFinder() {
           if(!isACityWithCoordinates(newRow, newCol) && document.getElementById(hashKey).style.backgroundColor === 'lightgrey'){
 			  timeouts.push(setTimeout(() => {
                   document.getElementById(hashKey).style.backgroundColor = 'grey';
-                },count*5));
+                },count*10));
               count++;
             }
 
@@ -151,7 +151,7 @@ function PathFinder() {
 		});
 		window.alert("Sorry. Destination can't be reached");
       return false;
-    },count*5);
+    },count*10);
   }
 
   const findShortestPath = async () => {
@@ -179,7 +179,7 @@ function PathFinder() {
           type: actionTypes.UPDATE_SHORTESTPATH,
           path: path
         })
-      },count*5);
+      },count*10);
       
   }
 
