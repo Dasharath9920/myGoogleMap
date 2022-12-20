@@ -6,7 +6,7 @@ import SwapVertIcon from '@mui/icons-material/SwapVert';
 import MapIcon from '@mui/icons-material/Map';
 import DirectionsIcon from '@mui/icons-material/Directions';
 import MoreVertIcon from '@mui/icons-material/MoreVert';
-import { Alert, LinearProgress } from '@mui/material';
+import { Alert, LinearProgress, Stepper, Step, StepLabel } from '@mui/material';
 
 function Sidebar() {
 
@@ -22,6 +22,8 @@ function Sidebar() {
   const [alertMessage, setAlertMessage] = useState('');
   const [alertType, setAlertType] = useState('info');
   const [showLoader, setShowLoader] = useState(false);
+  const [activeStep, setActiveStep] = useState(1);
+  const [alertVariant, setAlertVariant] = useState('filled');
 
   let stops = [...myState.stops];
   var timer = 0;
@@ -30,9 +32,10 @@ function Sidebar() {
     return 2001*(i+1000)+(j+1000);
   }
 
-  const showToast = (message, type, duration = 0) => {
+  const showToast = (message, type, variant, duration = 0) => {
     setAlertMessage(message);
     setAlertType(type);
+    setAlertVariant(variant);
 
     if(duration > 0){
         if(timer)
@@ -66,8 +69,12 @@ function Sidebar() {
     return myState.cities.some(city => city.r === row && city.c === col);
   }
 
-  const getCityFromCityName = (cityName,cities = myState.cities) => {
-    return cities.find(currentCity => currentCity.cityName === cityName);
+    const getCityFromCityName = (cityName,cities = myState.cities) => {
+        return cities.find(currentCity => currentCity.cityName === cityName);
+    }
+
+  const isAStop = (row, col) => {
+    myState.stops.some(stop => getCityFromCityName(stop).r == row && getCityFromCityName(stop).c == col);
   }
 
   const isCityValid = (cityName) => {
@@ -182,7 +189,7 @@ function Sidebar() {
         setPlayNavigation(true);
         setDisableDirection(true);
         setShowLoader(true);
-        showToast('Finding the best route for you. Please wait','info');
+        showToast('Finding the best route for you. Please wait','info','filled');
 
         dispatch({
             type: actionTypes.UPDATE_SOURCE,
@@ -200,7 +207,7 @@ function Sidebar() {
         })
     }
     else{
-        showToast('Invalid cities. Please choose cities from the map','warning',4);
+        showToast('Invalid cities. Please choose cities from the map','warning','filled',4);
         setSource('');
         setDestination('');
     }
@@ -213,13 +220,18 @@ function Sidebar() {
     setDisableNavigation(true);
     setPlayNavigation(true);
 
+    showToast(' ','info','outlined');
+
     let count = 0,oldRow = source.r,oldCol = source.c;
     myState.path.forEach(city => {
         setTimeout(() => {
 
             let transforms = `translate(${city.c*16 + 7}px, ${city.r*16 + 7}px) rotate(${rotate(oldRow,oldCol,city.r,city.c)}deg)`;
             document.getElementById('navigation-icon').style.transform = transforms;
-
+            if(isACityWithCoordinates(city.r, city.c) && isAStop(city.r, city.c)){
+                let currentStep = activeStep;
+                setActiveStep(currentStep + 1);
+            }
             oldRow = city.r;
             oldCol = city.c;
             setTimeout(() => {
@@ -231,6 +243,7 @@ function Sidebar() {
 
     setTimeout(() => {
         setPlayNavigation(false);
+        setAlertMessage('');
     },count*150);
   }
 
@@ -252,7 +265,7 @@ function Sidebar() {
             throw new Error('Stop already exist');
         }
 
-        showToast('Stop added successfully','success',3);
+        showToast('Stop added successfully','success','filled',3);
         stops.push(stopPoint);
         dispatch({
             type: actionTypes.UPDATE_STOPS,
@@ -260,7 +273,7 @@ function Sidebar() {
         })
         setStop('');
     }catch(e){
-        showToast(e.message,'warning',4);
+        showToast(e.message,'warning','filled',4);
     }
   }
 
@@ -269,9 +282,9 @@ function Sidebar() {
         return;
         
     if(stops.length === 0)
-        showToast('Stops are already Empty','warning',4);
+        showToast('Stops are already Empty','warning','filled',4);
     else{
-        showToast('Stops removed successfully','success',3);
+        showToast('Stops removed successfully','success','filled',3);
         dispatch({
             type: actionTypes.UPDATE_STOPS,
             stops: []
@@ -285,16 +298,15 @@ function Sidebar() {
 
   useEffect(() => {
     setShowLoader(false);
+    setPlayNavigation(false);
     if(myState.path.length === 0){
         setDisableNavigation(true);
-        setPlayNavigation(false);
         setAlertMessage('');
     }
     else{
         setDisableNavigation(false);
-        setPlayNavigation(false);
 
-        showToast('Here is the Shortest path. Click on Start Navigation','success',5);
+        showToast('Here is the Shortest path. Click on Start Navigation','success','filled',5);
         let sourceCity = getCityFromCityName(source);
         document.getElementById('navigation-icon').style.display = 'block';
         document.getElementById('navigation-icon').style.transform = `translate(${sourceCity.c*16 + 7}px, ${sourceCity.r*16 + 7}px)`;
@@ -357,10 +369,23 @@ function Sidebar() {
         <div className="alert-block">
             {alertMessage.length > 0 && 
                 <Alert 
-                    variant='filled' 
+                    variant={alertVariant} 
                     severity={alertType}>
                     {alertMessage} {showLoader && <LinearProgress className='loading'/>}
-                </Alert>}
+
+                    {disableNavigation && playNavigation && 
+                    <Stepper activeStep={activeStep}>
+                    {[myState.source,...stops,myState.destination].map((label, index) => {
+                        const stepProps = {};
+                        const labelProps = {};
+                        return (
+                            <Step key={label} {...stepProps}>
+                                <StepLabel {...labelProps}>{label}</StepLabel>
+                            </Step>
+                    );
+                })}
+                </Stepper>}
+            </Alert>}
         </div>
     </div>
   )
