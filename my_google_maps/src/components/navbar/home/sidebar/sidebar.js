@@ -113,9 +113,22 @@ function Sidebar() {
     if(disableDirection)
         return;
 
-    let src = source;
+    let src = isCityValid(source);
+    let dest = isCityValid(destination);
+
+    if(src){
+        let sourceCity = getCityFromCityName(src);
+        document.getElementById(hash(sourceCity.r, sourceCity.c)).style.backgroundColor = 'red';
+    }
+    if(dest){
+        let destinationCity = getCityFromCityName(dest);
+        document.getElementById(hash(destinationCity.r, destinationCity.c)).style.backgroundColor = 'green';
+    }
+
+    let previousSource = source;
     setSource(destination);
-    setDestination(src);
+    setDestination(previousSource);
+
   }
   
   const getDirections = () => {
