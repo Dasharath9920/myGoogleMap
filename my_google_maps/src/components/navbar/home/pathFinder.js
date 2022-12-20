@@ -171,7 +171,7 @@ function PathFinder() {
         resetSearchedBlocks();
         path.forEach(city => {
             if(!isACityWithCoordinates(city.r, city.c)){
-              document.getElementById(hash(city.r, city.c)).style.backgroundColor = 'green';
+              document.getElementById(hash(city.r, city.c)).style.backgroundColor = 'lightgreen';
             }
           });
           

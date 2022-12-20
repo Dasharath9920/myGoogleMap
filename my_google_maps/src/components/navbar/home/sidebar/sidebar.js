@@ -195,13 +195,13 @@ function Sidebar() {
     myState.path.forEach(city => {
         setTimeout(() => {
 
-            let transforms = `translate(${city.c*16 - 8}px, ${city.r*16 - 8}px) rotate(${rotate(oldRow,oldCol,city.r,city.c)}deg)`;
+            let transforms = `translate(${city.c*16 + 7}px, ${city.r*16 + 7}px) rotate(${rotate(oldRow,oldCol,city.r,city.c)}deg)`;
             document.getElementById('navigation-icon').style.transform = transforms;
 
             oldRow = city.r;
             oldCol = city.c;
             setTimeout(() => {
-                document.getElementById(hash(city.r, city.c)).style.backgroundColor = isACityWithCoordinates(city.r,city.c)? 'yellow': 'lightgreen';
+                document.getElementById(hash(city.r, city.c)).style.backgroundColor = isACityWithCoordinates(city.r,city.c)? 'yellow': 'green';
             },100);
         },count*150);
         count++;
@@ -267,7 +267,7 @@ function Sidebar() {
         let sourceCity = getCityFromCityName(source);
         let r = sourceCity.r, c = sourceCity.c;
         document.getElementById('navigation-icon').style.display = 'block';
-        document.getElementById('navigation-icon').style.transform = `translate(${c*16 - 8}px, ${r*16 - 8}px)`;
+        document.getElementById('navigation-icon').style.transform = `translate(${c*16 + 7}px, ${r*16 + 7}px)`;
     }
   },[myState.path]);
 

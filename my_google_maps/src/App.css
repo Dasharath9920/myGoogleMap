@@ -1,5 +1,10 @@
 .App{
   height: 100vh;
+  overflow: hidden;
+}
+
+.home{
+  width: 100vw;
 }
 
 .navbar{
@@ -136,13 +141,8 @@
 
 .map-container{
   flex: 5;
-  background-color: rgb(218, 230, 192);
+  padding: 15px;
   position: relative;
-}
-
-.map{
-  width: 100%;
-  height: 100%;
 }
 
 .map .map-row{
@@ -150,7 +150,6 @@
 }
 
 .map .block{
-  display: inline-block;
   margin-right: -10px;
   margin-bottom: 1px;
   width: 15px;
