@@ -53,20 +53,20 @@ function PathFinder() {
   }
 
   const buildPath = (parentBlocks, source, destination) => {
-    let temp = [];
+    let currentPath = [];
     let row = destination.r, col = destination.c;
     do{
         let hashKey = hash(row,col);
         let parentBlock = parentBlocks[hashKey];
 
-        temp.push({r: row, c: col});
+        currentPath.push({r: row, c: col});
         row = parentBlock.r;
         col = parentBlock.c;
 
     }while(row !== source.r || col !== source.c);
 
-    path.forEach(e => temp.push(e));
-    path = [...temp];
+    currentPath.push(...path);
+    path = [...currentPath];
   }
 
   const findPath =  (sourceCity, destinationCity) => {
@@ -101,12 +101,12 @@ function PathFinder() {
         
         if(isSafeToConstruct(newRow, newCol) && isRoadOrCity(newRow, newCol)){
 
-          timeouts.push(setTimeout(() => {
-            if(!isACityWithCoordinates(newRow, newCol) && document.getElementById(hashKey).style.backgroundColor !== 'blue'){
+          if(!isACityWithCoordinates(newRow, newCol) && document.getElementById(hashKey).style.backgroundColor === 'lightgrey'){
+			  timeouts.push(setTimeout(() => {
                   document.getElementById(hashKey).style.backgroundColor = 'grey';
-                }
-              },count*20));
+                },count*5));
               count++;
+            }
 
                 if(isACityWithCoordinates(newRow, newCol)){
                     if(newRow === destination.r && newCol === destination.c){
@@ -145,7 +145,7 @@ function PathFinder() {
     setTimeout(() => {
       window.alert("Sorry. Destination can't be reached");
       return false;
-    },count*20);
+    },count*5);
   }
 
   const findShortestPath = async () => {
@@ -157,19 +157,20 @@ function PathFinder() {
     for(let i = 1; i < stops.length && findPath(stops[i-1],stops[i]); i++);
 
     path.reverse();
-    path.pop();
 
     setTimeout(() => {
         resetSearchedBlocks();
         path.forEach(city => {
-            document.getElementById(hash(city.r, city.c)).style.backgroundColor = 'green';
+            if(!isACityWithCoordinates(city.r, city.c)){
+              document.getElementById(hash(city.r, city.c)).style.backgroundColor = 'green';
+            }
           });
           
         dispatch({
           type: actionTypes.UPDATE_SHORTESTPATH,
           path: path
         })
-      },count*20);
+      },count*5);
       
   }
 

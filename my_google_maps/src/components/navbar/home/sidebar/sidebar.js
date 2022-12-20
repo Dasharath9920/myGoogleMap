@@ -59,6 +59,9 @@ function Sidebar() {
   }
 
   const swapLocations = () => {
+    if(disableDirection)
+        return;
+
     let src = source;
     setSource(destination);
     setDestination(src);
@@ -215,7 +218,7 @@ function Sidebar() {
 
                 <div className="stops-container">
                     <div className="stops-input">
-                        <input type="text" placeholder='stop point' value={stop} onChange={e => setStop(e.target.value)}/>
+                        <input type="text" placeholder='add stop' value={stop} onChange={e => setStop(e.target.value)}/>
                     </div>
                     <button className={`button stop-button ${disableDirection && 'disable-button'}`} onClick={addStop}>Add</button>
                     <button className={`button stop-button ${disableDirection && 'disable-button'}`} onClick={resetStops}>Reset</button>
@@ -226,7 +229,7 @@ function Sidebar() {
                     <button className={`direction-button ${disableDirection && 'disable-direction-button'}`} onClick={getDirections}>Get Directions</button>
                 </div>
             </div>
-            <button id='swap-button' onClick={swapLocations}><SwapVertIcon className='swap-icon'/></button>
+            <button id='swap-button' className={`${disableDirection && 'disable-direction-button'}`} onClick={swapLocations}><SwapVertIcon className='swap-icon'/></button>
         </div>
         
         <button className={`button start-button ${disableNavigation && 'disable-button'}`} onClick={startNavigation}><DirectionsIcon className='location-icon'/> Start Navigation</button>
