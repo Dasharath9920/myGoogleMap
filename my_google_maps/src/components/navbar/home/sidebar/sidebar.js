@@ -6,6 +6,7 @@ import SwapVertIcon from '@mui/icons-material/SwapVert';
 import MapIcon from '@mui/icons-material/Map';
 import DirectionsIcon from '@mui/icons-material/Directions';
 import MoreVertIcon from '@mui/icons-material/MoreVert';
+import { Alert, LinearProgress } from '@mui/material';
 
 function Sidebar() {
 
@@ -18,10 +19,29 @@ function Sidebar() {
   const [playNavigation, setPlayNavigation] = useState(false);
   const [disableNavigation, setDisableNavigation] = useState(true);
   const [disableDirection, setDisableDirection] = useState(false);
+  const [alertMessage, setAlertMessage] = useState('');
+  const [alertType, setAlertType] = useState('info');
+  const [showLoader, setShowLoader] = useState(false);
+
   let stops = [...myState.stops];
+  var timer = 0;
 
   const hash = (i,j) => {
     return 2001*(i+1000)+(j+1000);
+  }
+
+  const showToast = (message, type, duration = 0) => {
+    setAlertMessage(message);
+    setAlertType(type);
+
+    if(duration > 0){
+        if(timer)
+            clearTimeout(timer);
+
+        timer = setTimeout(() => {
+            setAlertMessage('');
+        },duration*1000);
+    }
   }
 
   const rotate = (oldRow, oldCol, newRow, newCol) => {
@@ -161,6 +181,8 @@ function Sidebar() {
 
         setPlayNavigation(true);
         setDisableDirection(true);
+        setShowLoader(true);
+        showToast('Finding the best route for you. Please wait','info');
 
         dispatch({
             type: actionTypes.UPDATE_SOURCE,
@@ -178,7 +200,7 @@ function Sidebar() {
         })
     }
     else{
-        window.alert('Invalid cities. Please choose cities from the map');
+        showToast('Invalid cities. Please choose cities from the map','warning',4);
         setSource('');
         setDestination('');
     }
@@ -201,7 +223,7 @@ function Sidebar() {
             oldRow = city.r;
             oldCol = city.c;
             setTimeout(() => {
-                document.getElementById(hash(city.r, city.c)).style.backgroundColor = isACityWithCoordinates(city.r,city.c)? 'yellow': 'green';
+                document.getElementById(hash(city.r, city.c)).style.backgroundColor = isACityWithCoordinates(city.r,city.c)? 'yellow': 'skyblue';
             },100);
         },count*150);
         count++;
@@ -230,6 +252,7 @@ function Sidebar() {
             throw new Error('Stop already exist');
         }
 
+        showToast('Stop added successfully','success',3);
         stops.push(stopPoint);
         dispatch({
             type: actionTypes.UPDATE_STOPS,
@@ -237,7 +260,7 @@ function Sidebar() {
         })
         setStop('');
     }catch(e){
-        window.alert(e);
+        showToast(e.message,'warning',4);
     }
   }
 
@@ -245,10 +268,15 @@ function Sidebar() {
     if(disableDirection)
         return;
         
-    dispatch({
-        type: actionTypes.UPDATE_STOPS,
-        stops: []
-    })
+    if(stops.length === 0)
+        showToast('Stops are already Empty','warning',4);
+    else{
+        showToast('Stops removed successfully','success',3);
+        dispatch({
+            type: actionTypes.UPDATE_STOPS,
+            stops: []
+        })
+    }
   }
 
   useEffect(() => {
@@ -256,18 +284,20 @@ function Sidebar() {
   },[])
 
   useEffect(() => {
+    setShowLoader(false);
     if(myState.path.length === 0){
         setDisableNavigation(true);
         setPlayNavigation(false);
+        setAlertMessage('');
     }
     else{
         setDisableNavigation(false);
         setPlayNavigation(false);
 
+        showToast('Here is the Shortest path. Click on Start Navigation','success',5);
         let sourceCity = getCityFromCityName(source);
-        let r = sourceCity.r, c = sourceCity.c;
         document.getElementById('navigation-icon').style.display = 'block';
-        document.getElementById('navigation-icon').style.transform = `translate(${c*16 + 7}px, ${r*16 + 7}px)`;
+        document.getElementById('navigation-icon').style.transform = `translate(${sourceCity.c*16 + 7}px, ${sourceCity.r*16 + 7}px)`;
     }
   },[myState.path]);
 
@@ -323,6 +353,15 @@ function Sidebar() {
         
         <button className={`button start-button ${disableNavigation && 'disable-button'}`} onClick={startNavigation}><DirectionsIcon className='location-icon'/> Start Navigation</button>
         <button className={`button start-button ${playNavigation && 'disable-button'}`} onClick={generateCities}>New Map</button>
+
+        <div className="alert-block">
+            {alertMessage.length > 0 && 
+                <Alert 
+                    variant='filled' 
+                    severity={alertType}>
+                    {alertMessage} {showLoader && <LinearProgress className='loading'/>}
+                </Alert>}
+        </div>
     </div>
   )
 }

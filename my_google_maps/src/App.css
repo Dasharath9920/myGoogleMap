@@ -1,6 +1,7 @@
 .App{
   height: 100vh;
   overflow: hidden;
+  position: relative;
 }
 
 .home{
@@ -17,6 +18,7 @@
   color: white;
   padding: 0px 20px;
   font-size: .7rem;
+  z-index: 100;
 }
 
 .navbar_content_block{
@@ -156,6 +158,7 @@
   height: 15px;
   font-size: .9rem;
   text-align: center;
+  z-index: -1;
 }
 
 .button{
@@ -260,7 +263,21 @@
   position: absolute;
   left: 0;
   top: 0;
-  font-size: xx-large;
+  font-size: 200%;
   display: none;
   transition: .2s linear all;
+}
+
+.alert-block{
+  position: absolute;
+  left: 0;
+  top: 50px;
+  width: 100%;
+  display: flex;
+  justify-content: center;
+  z-index: 10;
+}
+
+.loading{
+  margin-top: 10px;
 }
