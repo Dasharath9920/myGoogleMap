@@ -76,9 +76,8 @@ function Sidebar() {
     }
 
   const isAStop = (row, col) => {
-    let isStop = myState.stops.some(stop => getCityFromCityName(stop).r == row && getCityFromCityName(stop).c == col);
-    let path = myState.path;
-    if(isStop || (row === path[path.length-1].r && col === path[path.length-1].c)){
+    let currentStop = getCityFromCityName(myState.stops[steps-1]);
+    if(currentStop.r === row && currentStop.c === col){
         ++steps;
         setActiveStep(steps);
     }
@@ -141,6 +140,7 @@ function Sidebar() {
     setDisableDirection(false);
     setAlertMessage('');
     steps = 1;
+    setActiveStep(1);
     document.getElementById('navigation-icon').style.display = 'none';
 
     let uniqueCities = new Set()
@@ -258,6 +258,8 @@ function Sidebar() {
 
     setTimeout(() => {
         setPlayNavigation(false);
+        ++steps;
+        setActiveStep(steps);
     },count*150);
   }
 
