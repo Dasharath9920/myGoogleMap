@@ -156,14 +156,13 @@ function PathFinder() {
 
   const findShortestPath = async () => {
     let stops = [...myState.stops];
-    
     stops.unshift(myState.source);
     stops.push(myState.destination);
 
-	let i = 1;
+    let i = 1;
     for(; i < stops.length && findPath(stops[i-1],stops[i]); i++);
-	if(i < stops.length)
-		return;
+    if(i < stops.length)
+      return;
 
     path.reverse();
 
@@ -171,7 +170,7 @@ function PathFinder() {
         resetSearchedBlocks();
         path.forEach(city => {
             if(!isACityWithCoordinates(city.r, city.c)){
-              document.getElementById(hash(city.r, city.c)).style.backgroundColor = 'lightgreen';
+              document.getElementById(hash(city.r, city.c)).style.backgroundColor = 'rgb(102, 187, 140)';
             }
           });
           
@@ -185,11 +184,6 @@ function PathFinder() {
 
   useEffect(() => {
     if(myState.findPath){
-      let sourceBlock = document.getElementById(hash(source.r, source.c));
-      let destinationBlock = document.getElementById(hash(destination.r, destination.c));
-      sourceBlock.style.backgroundColor = 'green';
-      destinationBlock.style.backgroundColor = 'red';
-
       findShortestPath();
 
       dispatch({
@@ -198,11 +192,6 @@ function PathFinder() {
       })
     }
   },[myState.findPath])
-
-  useEffect(() => {
-    count = 0;
-    timeouts.forEach(timer => clearTimeout(timer));
-  },[myState.cities]);
 
   return (
     <div></div>
