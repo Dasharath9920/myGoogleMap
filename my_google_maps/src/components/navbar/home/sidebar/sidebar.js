@@ -239,6 +239,7 @@ function Sidebar() {
     
     setDisableNavigation(true);
     setPlayNavigation(true);
+    setShowStepper(true);
     showToast(' ','info','outlined');
 
     let count = 0,oldRow = source.r,oldCol = source.c;
@@ -281,7 +282,7 @@ function Sidebar() {
             throw new Error('Stop already exist');
         }
 
-        showToast('Stop added successfully','success','filled',3);
+        showToast('Stop added successfully','success','filled',1);
         stops.push(stopPoint);
         dispatch({
             type: actionTypes.UPDATE_STOPS,
@@ -322,8 +323,7 @@ function Sidebar() {
     else{
         setDisableNavigation(false);
 
-        showToast('Here is the Shortest path. Click on Start Navigation','success','filled',5);
-        setShowStepper(true);
+        showToast('Click on Start Navigation','success','filled',2);
         let sourceCity = getCityFromCityName(source);
         document.getElementById('navigation-icon').style.display = 'block';
         document.getElementById('navigation-icon').style.transform = `translate(${sourceCity.c*16 + 7}px, ${sourceCity.r*16 + 7}px)`;
