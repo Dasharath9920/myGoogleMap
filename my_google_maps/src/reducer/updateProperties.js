@@ -1,14 +1,8 @@
 import actionTypes from "./actionTypes";
 
 const initializer = {
-    source: {
-        r: 0,
-        c: 0
-    },
-    destination: {
-        r: 0,
-        c: 0
-    },
+    source: '',
+    destination: '',
     map: [],
     cities: [],
     path: [],

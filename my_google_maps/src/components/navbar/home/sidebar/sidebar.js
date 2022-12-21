@@ -22,10 +22,12 @@ function Sidebar() {
   const [alertMessage, setAlertMessage] = useState('');
   const [alertType, setAlertType] = useState('info');
   const [showLoader, setShowLoader] = useState(false);
+  const [showStepper, setShowStepper] = useState(false);
   const [activeStep, setActiveStep] = useState(1);
   const [alertVariant, setAlertVariant] = useState('filled');
 
-  let stops = [...myState.stops];
+
+  let stops = [...myState.stops], steps = 1;
   var timer = 0;
 
   const hash = (i,j) => {
@@ -74,7 +76,12 @@ function Sidebar() {
     }
 
   const isAStop = (row, col) => {
-    myState.stops.some(stop => getCityFromCityName(stop).r == row && getCityFromCityName(stop).c == col);
+    let isStop = myState.stops.some(stop => getCityFromCityName(stop).r == row && getCityFromCityName(stop).c == col);
+    let path = myState.path;
+    if(isStop || (row === path[path.length-1].r && col === path[path.length-1].c)){
+        ++steps;
+        setActiveStep(steps);
+    }
   }
 
   const isCityValid = (cityName) => {
@@ -94,37 +101,46 @@ function Sidebar() {
 
   const changeSourceOrDestination = (city, stopType,cities = myState.cities) => {
       let cityName = isCityValid(city) || '';
-      
-      if(cityName || city.length === 0){
-          let city = getCityFromCityName(cityName,cities);
+      let src = source,dest = destination;
 
+      if(cityName || city.length === 0){
           if(stopType === 'source'){
               if(source){
                 let sourceCity = getCityFromCityName(source,cities);
                 document.getElementById(hash(sourceCity.r, sourceCity.c)).style.backgroundColor = 'yellow';
               }
+              src = cityName;
               setSource(cityName);
-              if(city)
-                document.getElementById(hash(city.r, city.c)).style.backgroundColor = 'green';
           }
           else if(stopType === 'destination'){
             if(destination){
                 let destinationCity = getCityFromCityName(destination,cities);
                 document.getElementById(hash(destinationCity.r, destinationCity.c)).style.backgroundColor = 'yellow';
               }
+              dest = cityName;
               setDestination(cityName);
-              if(city)
-                document.getElementById(hash(city.r, city.c)).style.backgroundColor = 'red';
           }
-      }
+        }
+
+        if(src){
+          let sourceCity = getCityFromCityName(src,cities);
+          document.getElementById(hash(sourceCity.r, sourceCity.c)).style.backgroundColor = 'green';
+        }
+        if(dest){
+          let destinationCity = getCityFromCityName(dest,cities);
+          document.getElementById(hash(destinationCity.r, destinationCity.c)).style.backgroundColor = 'red';
+        }
   }
 
   const generateCities = () => {
     if(playNavigation)
         return;
 
+    setShowStepper(false);
     setDisableNavigation(true);
     setDisableDirection(false);
+    setAlertMessage('');
+    steps = 1;
     document.getElementById('navigation-icon').style.display = 'none';
 
     let uniqueCities = new Set()
@@ -186,6 +202,10 @@ function Sidebar() {
         if(playNavigation)
             return;
 
+        if(src === dest){
+            showToast('Source and Destination should be not be same','warning','filled',6);
+            return;
+        }
         setPlayNavigation(true);
         setDisableDirection(true);
         setShowLoader(true);
@@ -219,21 +239,16 @@ function Sidebar() {
     
     setDisableNavigation(true);
     setPlayNavigation(true);
-
     showToast(' ','info','outlined');
 
     let count = 0,oldRow = source.r,oldCol = source.c;
-    myState.path.forEach(city => {
+    myState.path.forEach((city) => {
         setTimeout(() => {
-
             let transforms = `translate(${city.c*16 + 7}px, ${city.r*16 + 7}px) rotate(${rotate(oldRow,oldCol,city.r,city.c)}deg)`;
             document.getElementById('navigation-icon').style.transform = transforms;
-            if(isACityWithCoordinates(city.r, city.c) && isAStop(city.r, city.c)){
-                let currentStep = activeStep;
-                setActiveStep(currentStep + 1);
-            }
             oldRow = city.r;
             oldCol = city.c;
+            if(isACityWithCoordinates(city.r, city.c) && isAStop(city.r, city.c));
             setTimeout(() => {
                 document.getElementById(hash(city.r, city.c)).style.backgroundColor = isACityWithCoordinates(city.r,city.c)? 'yellow': 'skyblue';
             },100);
@@ -243,7 +258,6 @@ function Sidebar() {
 
     setTimeout(() => {
         setPlayNavigation(false);
-        setAlertMessage('');
     },count*150);
   }
 
@@ -307,6 +321,7 @@ function Sidebar() {
         setDisableNavigation(false);
 
         showToast('Here is the Shortest path. Click on Start Navigation','success','filled',5);
+        setShowStepper(true);
         let sourceCity = getCityFromCityName(source);
         document.getElementById('navigation-icon').style.display = 'block';
         document.getElementById('navigation-icon').style.transform = `translate(${sourceCity.c*16 + 7}px, ${sourceCity.r*16 + 7}px)`;
@@ -373,19 +388,21 @@ function Sidebar() {
                     severity={alertType}>
                     {alertMessage} {showLoader && <LinearProgress className='loading'/>}
 
-                    {disableNavigation && playNavigation && 
-                    <Stepper activeStep={activeStep}>
-                    {[myState.source,...stops,myState.destination].map((label, index) => {
-                        const stepProps = {};
-                        const labelProps = {};
-                        return (
-                            <Step key={label} {...stepProps}>
-                                <StepLabel {...labelProps}>{label}</StepLabel>
-                            </Step>
-                    );
-                })}
-                </Stepper>}
-            </Alert>}
+                    {showStepper && 
+                        <Stepper activeStep={activeStep}>
+                            {[source,...myState.stops,destination].map((label, index) => {
+                                const stepProps = {};
+                                const labelProps = {};
+                                return (
+                                    <Step key={label} {...stepProps}>
+                                        <StepLabel {...labelProps}>{label}</StepLabel>
+                                    </Step>
+                                    );
+                                }
+                            )}
+                        </Stepper>
+                    }
+                </Alert>}
         </div>
     </div>
   )

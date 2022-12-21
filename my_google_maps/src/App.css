@@ -271,7 +271,7 @@
 .alert-block{
   position: absolute;
   left: 0;
-  top: 50px;
+  top: 60px;
   width: 100%;
   display: flex;
   justify-content: center;
