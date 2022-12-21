@@ -169,7 +169,6 @@
   color: white;
   transition: .1s ease all;
   font-weight: bold;
-  letter-spacing: 1px;
   font-size: 1.2rem;
   width: 100%;
   margin: 3px;
@@ -179,6 +178,7 @@
   width: 90%;
   display: flex;
   justify-content: space-between;
+  font-family:'Times New Roman', Times, serif;
 }
 
 .button-group .button:nth-child(1){

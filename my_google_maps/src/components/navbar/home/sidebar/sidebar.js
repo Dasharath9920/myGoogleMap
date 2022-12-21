@@ -281,7 +281,7 @@ function Sidebar() {
         return;
 
       try{
-        if(stops.length > 10){
+        if(stops.length === 10){
             throw new Error('Maximum 10 stops are allowed');
         }
 
@@ -311,9 +311,9 @@ function Sidebar() {
         return;
         
     if(stops.length === 0)
-        showToast('Stops are already Empty','warning','filled',4);
+        showToast('Stops are already Empty','warning','filled',2);
     else{
-        showToast('Stops removed successfully','success','filled',3);
+        showToast('Stops removed successfully','success','filled',2);
         dispatch({
             type: actionTypes.UPDATE_STOPS,
             stops: []

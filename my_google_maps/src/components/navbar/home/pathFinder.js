@@ -74,7 +74,6 @@ function PathFinder() {
     let source = getCityFromCityName(sourceCity);
     let destination = getCityFromCityName(destinationCity);
     let blocks = [];
-    let visitedBlocks = new Set();
     let cost = {}, parentBlocks = {};
     
     for(let i = 0; i < 50; i++){
@@ -90,7 +89,6 @@ function PathFinder() {
       r: source.r,
       c: source.c
     });
-    visitedBlocks.add(hash(source.r, source.c));  
 
     while(blocks.length > 0){
       let currentBlock = blocks.shift();
@@ -102,9 +100,12 @@ function PathFinder() {
         
         if(isSafeToConstruct(newRow, newCol) && isRoadOrCity(newRow, newCol)){
 
-          if(!isACityWithCoordinates(newRow, newCol) && document.getElementById(hashKey).style.backgroundColor === 'lightgrey'){
-			  timeouts.push(setTimeout(() => {
-                  document.getElementById(hashKey).style.backgroundColor = 'grey';
+          if(!isACityWithCoordinates(newRow, newCol)){
+			        timeouts.push(setTimeout(() => {
+                document.getElementById(hashKey).style.backgroundColor = 'blue';
+                setTimeout(() => {
+                    document.getElementById(hashKey).style.backgroundColor = 'grey';
+                  },100);
                 },count*10));
               count++;
             }
@@ -122,7 +123,6 @@ function PathFinder() {
                 let newF = newG + h;
                 if(cost[hashKey] > newF){
                     parentBlocks[hashKey] = {r: currentBlock.r, c: currentBlock.c};
-                    visitedBlocks.add(hashKey);
                     blocks.push({
                         g: newG,
                         f: newF,
@@ -151,7 +151,7 @@ function PathFinder() {
 		});
 		window.alert("Sorry. Destination can't be reached");
       return false;
-    },count*10);
+    },count*10+100);
   }
 
   const findShortestPath = async () => {
@@ -178,7 +178,7 @@ function PathFinder() {
           type: actionTypes.UPDATE_SHORTESTPATH,
           path: path
         })
-      },count*10);
+      },count*10 + 100);
       
   }
 
