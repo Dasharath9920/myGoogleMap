@@ -46,7 +46,7 @@ function Home() {
       m = 90;
       maxCities = 40;
     }
-    else if(window.innerWidth > 1550){
+    else if(window.innerWidth > 1650){
       n = 45;
       m = 72;
       maxCities = 35;
@@ -56,18 +56,23 @@ function Home() {
       m = 63;
       maxCities = 28;
     }
-    else if(window.innerWidth > 1220){
+    else if(window.innerWidth > 1200){
       n = 38;
       m = 54;
       maxCities = 24;
     }
-    else{
+    else if(window.innerWidth > 830){
       n = 35;
       m = 50;
       maxCities = 20;
     }
-
+    else{
+      n = 28;
+      m = 24;
+      maxCities = 15;
+    }
     generateMap();
+    console.log(window.innerWidth)
   }
 
   useEffect(() => {

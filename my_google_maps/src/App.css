@@ -6,11 +6,14 @@
 
 .home{
   width: 100vw;
+  display: flex;
+  height: 92vh;
+  position: relative;
 }
 
 .navbar{
   width: 100%;
-  height: 50px;
+  height: 8vh;
   display: flex;
   align-items: center;
   justify-content: space-around;
@@ -78,11 +81,6 @@
   margin: 0px 10px;
 }
 
-.home{
-  display: flex;
-  height: 100%;
-}
-
 .sidebar{
   flex: 1;
   display: flex;
@@ -95,6 +93,12 @@
 
 .sidebar .location_block{
   display: flex;
+  flex-direction: column;
+  align-items: flex-start;
+}
+
+.sidebar .locations{
+  width: 250px;
 }
 
 .sidebar .location{
@@ -120,13 +124,17 @@
   font-size:xx-large;
 }
 
-.sidebar #swap-button{
-  margin: 85px 10px;
+.sidebar .locations_container{
+  display: flex;
+}
+
+.sidebar .swap-button{
   height: 35px;
   width: 35px;
   background-color: transparent;
   border: none;
   cursor: pointer;
+  margin: 85px 10px;
 }
 
 .sidebar input{
@@ -143,8 +151,10 @@
 
 .map-container{
   flex: 5;
-  padding: 15px;
+  padding: 10px;
   position: relative;
+  display: flex;
+  align-items: flex-end;
 }
 
 .map .map-row{
@@ -152,6 +162,7 @@
 }
 
 .map .block{
+  display: inline-block;
   margin-right: -10px;
   margin-bottom: 1px;
   width: 15px;
@@ -171,13 +182,13 @@
   font-weight: bold;
   font-size: 1.2rem;
   width: 100%;
-  margin: 3px;
 }
 
 .button-group{
-  width: 92%;
-  display: flex;
-  justify-content: space-between;
+  width: 100%;
+  display: inline-grid;
+  grid-template-columns: repeat(2,1fr);
+  column-gap: 5px;
   font-family:'Times New Roman', Times, serif;
 }
 
@@ -202,11 +213,11 @@
 }
 
 .stops-container{
-  width: 100%;
+  width: 250px;
   display: flex;
   align-items: center;
   justify-content: space-between;
-  padding: 20px 10px 20px 20px;
+  padding: 20px 10px 20px 30px;
 }
 
 .stops-input{
@@ -240,8 +251,16 @@
   color: white;
 }
 
+.parent-button-group{
+  width: 100%;
+}
+
+.parent-stops-container{
+  margin-right: auto;
+}
+
 .navigation-button{
-  width: 90%;
+  width: 100%;
   background-color: rgb(95, 165, 231);
   margin: 10px 0px;
   padding: 15px 25px;
@@ -296,4 +315,141 @@
 
 .step{
   margin-top: -3px;
+}
+
+@media only screen and (max-width: 1220px){
+    .home{
+      display: flex;
+      flex-direction: column-reverse;
+    }
+
+    .sidebar{
+      flex-direction: row;
+      align-items: center;
+      justify-content: space-around;
+    }
+
+    .button{
+      font-size: .9rem;
+      padding: 8px 15px;
+    }
+
+    .parent-button-group{
+      width: 250px;
+    }
+
+    .navigation-button{
+      padding: 8px 10px;
+      font-size: 1rem;
+      margin-top: 0px;
+      background-color: blue;
+    }
+
+    .location{
+      height: 30px;
+    }
+
+    .direction-button{
+      margin: 5px 0px 0px 10px;
+    }
+
+    .location_block{
+      display: flex;
+      flex-direction: row !important;
+      align-items: center !important;
+      justify-content: center !important;
+    }
+
+    .stops-container{
+      padding: 5px 0px;
+    }
+
+    .parent-stops-container{
+      margin-right: 0px;
+    }
+
+    .more-icon, .swap-button{
+      display: none !important;
+    }
+}
+
+@media only screen and (max-width: 830px){
+
+  .sidebar{
+    padding: 0px;
+  }
+
+  .navbar{
+    height: 7vh;
+    justify-content: space-between;
+  }
+
+  .navbar .navbar_content_block h1{
+    font-size: 1.3rem !important;
+  }
+
+  .navbar .navbar_content_block:nth-child(2) h1{
+    font-size: 1.1rem !important;
+  }
+
+  .navbar .navbar_content_block:nth-child(2) .map-icon{
+    font-size: large;
+  }
+
+  .home{
+    height: 93vh;
+  }
+  
+  .swap-button{
+    display: block !important;
+    margin: 50px 20px !important;
+  }
+
+  .location_block{
+    position: absolute;
+    margin-left: auto;
+    margin-right: auto;
+    top: 0;
+    left: 0;
+    right: 0;
+    text-align: center;
+  }
+
+  .locations_container .locations{
+    width: 70vw;
+  }
+
+  .locations_container .location-search{
+    width: 100%;
+  }
+
+  .parent-stops-container{
+    width: 190px;
+  }
+
+  .stops-container{
+    width: 190px;
+  }
+
+  .stops-container .button{
+    padding: 5px 8px;
+    width: 60px;
+  }
+
+  .stops-input{
+    width: 50px;
+    padding-left: 0px;
+  }
+
+  .location-icon{
+    display: none !important;
+  }
+
+  .parent-button-group{
+    width: 190px;
+  }
+
+  .parent-button-group .button{
+    padding: 8px 10px;
+  }
 }

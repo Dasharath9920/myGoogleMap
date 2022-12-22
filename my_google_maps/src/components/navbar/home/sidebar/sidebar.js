@@ -145,13 +145,11 @@ function Sidebar() {
 
     steps = 1;
     document.getElementById('navigation-icon').style.display = 'none';
-    document.querySelector('.alert-block').style.bottom = 'auto';
-    document.querySelector('.alert-block').style.top = '60px';
 
     let uniqueCities = new Set()
     let citiesGenerated = [], n = myState.mapSize.n, m = myState.mapSize.m;
     while(uniqueCities.size < myState.maxCities){
-        let xRatio = myState.maxCities > 30? 5: 4;
+        let xRatio = (myState.maxCities > 30 || myState.maxCities < 20)? 5: 4;
         let yRatio = myState.maxCities/xRatio
 
         let r = Math.floor(Math.floor(uniqueCities.size/yRatio)*Math.floor(n/xRatio) + Math.floor(Math.random()*Math.floor(n/xRatio)));
@@ -257,8 +255,6 @@ function Sidebar() {
     setShowStepper(true);
     setShowEndRoute(false);
     showToast(' ','warning','filled');
-    document.querySelector('.alert-block').style.top = 'auto';
-    document.querySelector('.alert-block').style.bottom = '10px';
 
     let count = 0,oldRow = source.r,oldCol = source.c;
     myState.path.forEach((city) => {
@@ -344,8 +340,6 @@ function Sidebar() {
 
     steps = 1;
     document.getElementById('navigation-icon').style.display = 'none';
-    document.querySelector('.alert-block').style.bottom = 'auto';
-    document.querySelector('.alert-block').style.top = '60px';
 
     myState.path.forEach(city => {
         if(!isACityWithCoordinates(city.r, city.c))
@@ -403,57 +397,61 @@ function Sidebar() {
     <div className='sidebar'>
         <div className="location_block">
             <div className="locations_container">
-                <div className="location">
-                    <PlaceIcon className='source-icon'/>
-                    <div  className='location-search'>
-                        <input type="text" placeholder='Choose starting point' value={source} onChange={(e) => changeSourceOrDestination(e.target.value,'source')}/>
+                <div className="locations"> 
+                    <div className="location">
+                        <PlaceIcon className='source-icon'/>
+                        <div  className='location-search'>
+                            <input type="text" placeholder='Choose starting point' value={source} onChange={(e) => changeSourceOrDestination(e.target.value,'source')}/>
+                        </div>
+                    </div>
+
+                    <div className="location more-icon">
+                        <MoreVertIcon />
+                    </div>
+
+                    <div className="stops">
+                        {stops.length > 0? 
+                            stops.map((stop,index) => {
+                                return <h4 key={index}>{index? ' , ': ''} {stop}</h4>
+                            }):
+                            'No Stops'}
+                    </div>
+                    <div className="location more-icon">
+                        <MoreVertIcon />
+                    </div>
+
+                    <div className="location">
+                        <PlaceIcon className='destination-icon'/>
+                        <div className='location-search'>
+                            <input type="text" placeholder='Choose destination' value={destination} onChange={(e) => changeSourceOrDestination(e.target.value,'destination')}/>
+                        </div>
                     </div>
                 </div>
-
-                <div className="location more-icon">
-                    <MoreVertIcon />
-                </div>
-
-                <div className="stops">
-                    {stops.length > 0? 
-                        stops.map((stop,index) => {
-                            return <h4 key={index}>{index? ' , ': ''} {stop}</h4>
-                        }):
-                        'No Stops'}
-                </div>
-
-                <div className="location more-icon">
-                    <MoreVertIcon />
-                </div>
-
-                <div className="location">
-                    <PlaceIcon className='destination-icon'/>
-                    <div className='location-search'>
-                        <input type="text" placeholder='Choose destination' value={destination} onChange={(e) => changeSourceOrDestination(e.target.value,'destination')}/>
-                    </div>
-                </div>
-
-                <div className="stops-container">
-                    <div className="stops-input">
-                        <input type="text" placeholder='add stop' value={stop} onChange={e => setStop(e.target.value)}/>
-                    </div>
-                    <button className={`button stop-button ${disableDirection && 'disable-button'}`} onClick={addStop}>Add</button>
-                    <button className={`button stop-button ${disableDirection && 'disable-button'}`} onClick={resetStops}>Reset</button>
-                </div>
-
-                <div className="location">
-                    <MapIcon className='location-icon'/>
-                    <button className={`direction-button ${disableDirection && 'disable-direction-button'}`} onClick={getDirections}>Get Directions</button>
-                </div>
+                <button className={`swap-button ${disableDirection && 'disable-direction-button'}`} onClick={swapLocations}><SwapVertIcon className='swap-icon'/></button>
             </div>
-            <button id='swap-button' className={`${disableDirection && 'disable-direction-button'}`} onClick={swapLocations}><SwapVertIcon className='swap-icon'/></button>
+
+        </div>
+        <div className="parent-stops-container">
+            <div className="stops-container">
+                <div className="stops-input">
+                    <input type="text" placeholder='add stop' value={stop} onChange={e => setStop(e.target.value)}/>
+                </div>
+                <button className={`button stop-button ${disableDirection && 'disable-button'}`} onClick={addStop}>Add</button>
+                <button className={`button stop-button ${disableDirection && 'disable-button'}`} onClick={resetStops}>Reset</button>
+            </div>
+
+            <div className="location">
+                <MapIcon className='location-icon'/>
+                <button className={`direction-button ${disableDirection && 'disable-direction-button'}`} onClick={getDirections}>Get Directions</button>
+            </div>
         </div>
         
-        <button className={`button navigation-button ${disableNavigation && 'disable-button'}`} onClick={startNavigation}><DirectionsIcon className='location-icon'/> Start Navigation</button>
-
-        <div className="button-group">
-            <button className={`button ${!showEndRoute && 'disable-button'}`} onClick={endRoute}>End Route</button>
-            <button className={`button ${playNavigation && 'disable-button'}`} onClick={generateCities}>New Map</button>
+        <div className="parent-button-group">
+            <button className={`button navigation-button ${disableNavigation && 'disable-button'}`} onClick={startNavigation}><DirectionsIcon className='location-icon'/> Start Navigation</button>
+            <div className="button-group">
+                <button className={`button ${!showEndRoute && 'disable-button'}`} onClick={endRoute}>End Route</button>
+                <button className={`button ${playNavigation && 'disable-button'}`} onClick={generateCities}>New Map</button>
+            </div>
         </div>
 
         <div className="alert-block">

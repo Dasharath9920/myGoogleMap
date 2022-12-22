@@ -156,8 +156,8 @@ function Map() {
                   {row.map(block => {
                       let has = hash(block.r,block.c);
                       return <div className="block" id={has} key={has} style={{transform:`translateX(${block.c*11}px)`}}></div>
+                    })
                   }
-                  )}
               </div>  
           })}
         </div>
