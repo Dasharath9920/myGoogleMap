@@ -175,7 +175,7 @@
 }
 
 .button-group{
-  width: 90%;
+  width: 92%;
   display: flex;
   justify-content: space-between;
   font-family:'Times New Roman', Times, serif;
@@ -292,4 +292,8 @@
 
 .loading{
   margin-top: 10px;
+}
+
+.step{
+  margin-top: -3px;
 }

@@ -7,9 +7,11 @@ const initializer = {
     cities: [],
     path: [],
     stops: [],
+    mapSize: {n:50, m: 90},
     roads: new Set(),
     navigate: false,
     findPath: false,
+    maxCities: 40
 };
 
 const updateProperties = (state=initializer, action) => {
@@ -30,8 +32,16 @@ const updateProperties = (state=initializer, action) => {
             return {...state, source: action.source};
         }
 
+        case actionTypes.UPDATE_MAXIMUM_CITIES:{
+            return {...state, maxCities: action.maxCities};
+        }
+
         case actionTypes.UPDATE_ROADS:{
             return {...state, roads: action.roads};
+        }
+
+        case actionTypes.UPDATE_MAPSIZE:{
+            return {...state, mapSize: action.mapSize};
         }
 
         case actionTypes.UPDATE_SHORTESTPATH: {

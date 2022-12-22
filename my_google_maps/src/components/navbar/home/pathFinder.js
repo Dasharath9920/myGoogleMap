@@ -43,8 +43,8 @@ function PathFinder() {
   }
 
   const resetSearchedBlocks = () => {
-    for(let i = 0; i < 50; i++){
-      for(let j = 0; j < 90; j++){
+    for(let i = 0; i < myState.mapSize.n; i++){
+      for(let j = 0; j < myState.mapSize.m; j++){
         let hashKey = hash(i,j);
         let block = document.getElementById(hashKey);
         if(block.style.backgroundColor === 'grey')
@@ -76,8 +76,8 @@ function PathFinder() {
     let blocks = [];
     let cost = {}, parentBlocks = {};
     
-    for(let i = 0; i < 50; i++){
-      for(let j = 0; j < 90; j++){
+    for(let i = 0; i < myState.mapSize.n; i++){
+      for(let j = 0; j < myState.mapSize.m; j++){
         let hashKey = hash(i,j);
         cost[hashKey] = Number.MAX_VALUE;
       }

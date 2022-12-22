@@ -8,17 +8,17 @@ function Map() {
   const myState = useSelector(state => state.updateProperties);
   const dispatch = useDispatch();
 
-  let hash = (i,j) => {
-    return 2001*(i+1000)+(j+1000);
-  }
-
   const grid = [...myState.map];
   const x_dir = [-1,0,0,1,-1,-1,1,1];
   const y_dir = [0,-1,1,0,-1,-1,-1,1];
 
+  const hash = (i,j) => {
+    return 2001*(i+1000)+(j+1000);
+  }
+
   const resetCities = () => {
-    for(let i = 0; i < 50; i++){
-      for(let j = 0; j < 100; j++){
+    for(let i = 0; i < myState.mapSize.n; i++){
+      for(let j = 0; j < myState.mapSize.m; j++){
         let key = hash(i,j);
         let cell = document.getElementById(key);
         if(cell){
@@ -30,7 +30,7 @@ function Map() {
   }
 
   const constructCities = () => {
-   myState.cities.forEach((block,index) => {
+   myState.cities.forEach((block) => {
       let key = hash(block.r, block.c);
       let cell = document.getElementById(key);
       if(cell){
@@ -51,7 +51,7 @@ function Map() {
   }
 
   const isSafeToConstruct = (r,c) => {
-    return r >= 0 && c >= 0 && r < 50 && c < 90;
+    return r >= 0 && c >= 0 && r < myState.mapSize.n && c <myState.mapSize.m;
   }
 
   const buildRoad = (row, col, parentBlocks, roads, source) => {
@@ -132,7 +132,7 @@ function Map() {
 
     for(let i = 0; i < myState.cities.length; i++){
       connectThreeCitiesTo(city,connectedCities,roads);
-      let nextCity = city.cityName === 40? 1: city.cityName + 1;
+      let nextCity = city.cityName === myState.maxCities? 1: city.cityName + 1;
       city = myState.cities.find(currentCity => currentCity.cityName === nextCity);
     }
 

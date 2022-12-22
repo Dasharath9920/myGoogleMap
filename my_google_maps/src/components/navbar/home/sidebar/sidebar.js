@@ -89,7 +89,7 @@ function Sidebar() {
     try{
         city = Number(cityName);
 
-        if(!city || cityName.length === 0 || city > 40){
+        if(!city || cityName.length === 0 || city > myState.maxCities){
             throw new Error();
         }
     } catch(e){
@@ -145,12 +145,17 @@ function Sidebar() {
 
     steps = 1;
     document.getElementById('navigation-icon').style.display = 'none';
+    document.querySelector('.alert-block').style.bottom = 'auto';
+    document.querySelector('.alert-block').style.top = '60px';
 
     let uniqueCities = new Set()
-    let citiesGenerated = []
-    while(uniqueCities.size < 40){
-        let r = Math.floor(Math.floor(uniqueCities.size/8)*10 + Math.random()*10);
-        let c = Math.floor((uniqueCities.size%8)*11 + Math.random()*13);
+    let citiesGenerated = [], n = myState.mapSize.n, m = myState.mapSize.m;
+    while(uniqueCities.size < myState.maxCities){
+        let xRatio = myState.maxCities > 30? 5: 4;
+        let yRatio = myState.maxCities/xRatio
+
+        let r = Math.floor(Math.floor(uniqueCities.size/yRatio)*Math.floor(n/xRatio) + Math.floor(Math.random()*Math.floor(n/xRatio)));
+        let c = Math.floor((uniqueCities.size%yRatio)*Math.floor(m/yRatio) + Math.floor(Math.random()*Math.floor(m/yRatio)));
         let has = hash(r,c);
 
         if(!uniqueCities.has(has)){
@@ -251,7 +256,9 @@ function Sidebar() {
     setPlayNavigation(true);
     setShowStepper(true);
     setShowEndRoute(false);
-    showToast(' ','info','outlined');
+    showToast(' ','warning','filled');
+    document.querySelector('.alert-block').style.top = 'auto';
+    document.querySelector('.alert-block').style.bottom = '10px';
 
     let count = 0,oldRow = source.r,oldCol = source.c;
     myState.path.forEach((city) => {
@@ -337,6 +344,8 @@ function Sidebar() {
 
     steps = 1;
     document.getElementById('navigation-icon').style.display = 'none';
+    document.querySelector('.alert-block').style.bottom = 'auto';
+    document.querySelector('.alert-block').style.top = '60px';
 
     myState.path.forEach(city => {
         if(!isACityWithCoordinates(city.r, city.c))
@@ -371,7 +380,7 @@ function Sidebar() {
 
   useEffect(() => {
     generateCities();
-  },[])
+  },[myState.mapSize])
 
   useEffect(() => {
     setShowLoader(false);
@@ -450,8 +459,9 @@ function Sidebar() {
         <div className="alert-block">
             {alertMessage.length > 0 && 
                 <Alert 
-                    variant={alertVariant} 
-                    severity={alertType}>
+                    variant={alertVariant}
+                    severity={alertType}
+                    icon={false}>
                     {alertMessage} {showLoader && <LinearProgress className='loading'/>}
 
                     {showStepper && 
@@ -460,8 +470,8 @@ function Sidebar() {
                                 const stepProps = {};
                                 const labelProps = {};
                                 return (
-                                    <Step key={label} {...stepProps}>
-                                        <StepLabel {...labelProps}>{label}</StepLabel>
+                                    <Step key={label} {...stepProps} className='step'>
+                                        <StepLabel {...labelProps}><strong>{label}</strong></StepLabel>
                                     </Step>
                                     );
                                 }
