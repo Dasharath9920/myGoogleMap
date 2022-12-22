@@ -466,7 +466,7 @@
 
   .map-container{
     flex: 11;
-    margin-top: 50px;
+    margin-top: 60px;
     overflow: hidden;
   }
 
@@ -531,7 +531,7 @@
 
   .map-container{
     flex: 11;
-    margin-top: 50px;
+    margin-top: 60px;
     overflow: hidden;
   }
 }
