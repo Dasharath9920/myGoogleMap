@@ -420,7 +420,7 @@
     position: absolute;
     margin-left: auto;
     margin-right: auto;
-    bottom: 90px;
+    bottom: 80px;
     left: 0;
     right: 0;
     text-align: center;
@@ -461,6 +461,7 @@
     display: flex;
     align-items: flex-end;
     flex-direction: row;
+    padding: 2px;
   }
 
   .map-container{
@@ -493,6 +494,10 @@
 
   .alert-block{
     top: 2px;
+  }
+
+  .stops-input{
+    margin-left: 0px;
   }
 
   .parent-button-group{
