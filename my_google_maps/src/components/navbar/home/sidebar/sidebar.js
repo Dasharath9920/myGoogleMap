@@ -149,7 +149,7 @@ function Sidebar() {
     let uniqueCities = new Set()
     let citiesGenerated = [], n = myState.mapSize.n, m = myState.mapSize.m;
     while(uniqueCities.size < myState.maxCities){
-        let xRatio = (myState.maxCities > 30 || myState.maxCities < 20)? 5: 4;
+        let xRatio = (myState.maxCities > 30 || myState.maxCities < 16)? 5: 4;
         let yRatio = myState.maxCities/xRatio
 
         let r = Math.floor(Math.floor(uniqueCities.size/yRatio)*Math.floor(n/xRatio) + Math.floor(Math.random()*Math.floor(n/xRatio)));

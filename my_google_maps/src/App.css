@@ -466,7 +466,8 @@
 
   .map-container{
     flex: 11;
-    margin-top: 55px;
+    margin-top: 50px;
+    overflow: hidden;
   }
 
   .direction-button{
@@ -516,5 +517,21 @@
 
   .parent-button-group .button{
     padding: 6px 8px;
+  }
+}
+
+@media only screen and (max-height: 690px) {
+  .sidebar{
+    flex: 4;
+    display: flex;
+    align-items: flex-end;
+    flex-direction: row;
+    padding: 2px;
+  }
+
+  .map-container{
+    flex: 11;
+    margin-top: 50px;
+    overflow: hidden;
   }
 }
