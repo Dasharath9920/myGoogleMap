@@ -72,7 +72,6 @@ function Home() {
       maxCities = 15;
     }
     generateMap();
-    console.log(window.innerWidth)
   }
 
   useEffect(() => {

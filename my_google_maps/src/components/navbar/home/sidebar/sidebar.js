@@ -259,7 +259,7 @@ function Sidebar() {
     let count = 0,oldRow = source.r,oldCol = source.c;
     myState.path.forEach((city) => {
         setTimeout(() => {
-            let transforms = `translate(${city.c*16 + 7}px, ${city.r*16 + 7}px) rotate(${rotate(oldRow,oldCol,city.r,city.c)}deg)`;
+            let transforms = `translate(${city.c*16 + 2}px, ${city.r*16 + 2}px) rotate(${rotate(oldRow,oldCol,city.r,city.c)}deg)`;
             document.getElementById('navigation-icon').style.transform = transforms;
             oldRow = city.r;
             oldCol = city.c;
@@ -284,8 +284,9 @@ function Sidebar() {
         return;
 
       try{
-        if(stops.length === 10){
-            throw new Error('Maximum 10 stops are allowed');
+        let maxCitiesAllowed = myState.maxCities < 20? 4: 10;
+        if(stops.length === maxCitiesAllowed){
+            throw new Error(`Maximum ${maxCitiesAllowed} stops are allowed`);
         }
 
         let stopPoint = Number(stop);
@@ -389,7 +390,7 @@ function Sidebar() {
         setShowEndRoute(true);
         let sourceCity = getCityFromCityName(source);
         document.getElementById('navigation-icon').style.display = 'block';
-        document.getElementById('navigation-icon').style.transform = `translate(${sourceCity.c*16 + 7}px, ${sourceCity.r*16 + 7}px)`;
+        document.getElementById('navigation-icon').style.transform = `translate(${sourceCity.c*16 + 2}px, ${sourceCity.r*16 + 2}px)`;
     }
   },[myState.path]);
 
@@ -401,7 +402,7 @@ function Sidebar() {
                     <div className="location">
                         <PlaceIcon className='source-icon'/>
                         <div  className='location-search'>
-                            <input type="text" placeholder='Choose starting point' value={source} onChange={(e) => changeSourceOrDestination(e.target.value,'source')}/>
+                            <input type="text" placeholder={myState.maxCities < 20? 'Source': 'Choose starting point'} value={source} onChange={(e) => changeSourceOrDestination(e.target.value,'source')}/>
                         </div>
                     </div>
 
@@ -423,7 +424,7 @@ function Sidebar() {
                     <div className="location">
                         <PlaceIcon className='destination-icon'/>
                         <div className='location-search'>
-                            <input type="text" placeholder='Choose destination' value={destination} onChange={(e) => changeSourceOrDestination(e.target.value,'destination')}/>
+                            <input type="text" placeholder={myState.maxCities < 20? 'Destination': 'Choose destination'} value={destination} onChange={(e) => changeSourceOrDestination(e.target.value,'destination')}/>
                         </div>
                     </div>
                 </div>
