@@ -9,7 +9,7 @@ function Home() {
   const myState = useSelector(state => state.updateProperties);
   const dispatch = useDispatch();
 
-  var n = myState.mapSize.n, m = myState.mapSize.m, maxCities = myState.maxCities,prevWidth = window.innerWidth;
+  var n = myState.mapSize.n, m = myState.mapSize.m, maxCities = myState.maxCities,prevWidth = -1;
 
   const generateMap = () => {
     let grid = [];
@@ -47,7 +47,7 @@ function Home() {
     prevWidth = window.innerWidth;
 
     if(window.innerWidth > 1700){
-      n = 50;
+      n = 45;
       m = 90;
       maxCities = 40;
     }
@@ -67,13 +67,13 @@ function Home() {
       maxCities = 24;
     }
     else if(window.innerWidth > 830){
-      n = 35;
+      n = 32;
       m = 50;
       maxCities = 20;
     }
     else{
       n = 25;
-      m = 22;
+      m = 21;
       maxCities = 15;
     }
     generateMap();

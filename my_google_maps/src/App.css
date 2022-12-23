@@ -150,16 +150,19 @@
 }
 
 .map-container{
+  width: 100%;
   padding: 10px;
   position: relative;
   display: flex;
+  flex-direction: column;
+  margin-top: 50px;
 }
 
 .map-row{
   display: flex;
 }
 
-.map .block{
+.block{
   display: inline-block;
   margin-right: -10px;
   margin-bottom: 1px;
@@ -205,13 +208,13 @@
 }
 
 .stop-button{
-  padding: 5px 10px;
+  padding: 6px 10px;
   font-size: .9rem;
   width: 60px;
 }
 
 .stops-container{
-  width: 250px;
+  width: 240px;
   display: flex;
   align-items: center;
   justify-content: space-between;
@@ -219,7 +222,7 @@
 }
 
 .stops-input{
-  width: 70px;
+  width: 60px;
   margin: 0px 4px;
   border-bottom: 1px solid grey;
   padding-left: 5px;
@@ -230,13 +233,17 @@
   background-color: rgb(60, 153, 60);
 }
 
+.location-icon{
+  margin-left: -12px;
+}
+
 .direction-button{
   padding: 8px 10px;
   font-size: 1rem;
   border: 2px solid lightgrey;
-  margin: 10px 10px;
+  margin: 10px 0px;
   font-weight: bold;
-  width: 200px;
+  width: 210px;
   border-radius: 10px;
   color: rgb(30, 130, 224);
   background-color: white;
@@ -259,7 +266,7 @@
 
 .navigation-button{
   width: 100%;
-  background-color: rgb(95, 165, 231);
+  background-color: rgb(86, 162, 233);
   margin: 10px 0px;
   padding: 15px 25px;
   display: flex;
@@ -300,7 +307,7 @@
 .alert-block{
   position: absolute;
   left: 0;
-  top: 10px;
+  top: 5px;
   width: 100%;
   display: flex;
   justify-content: center;
@@ -344,7 +351,7 @@
       padding: 8px 10px;
       font-size: 1rem;
       margin-top: 10px;
-      background-color: blue;
+      background-color: rgb(86, 162, 233);;
     }
 
     #navigation-icon{
@@ -423,7 +430,7 @@
     position: absolute;
     margin-left: auto;
     margin-right: auto;
-    top: 0px;
+    top: 10px;
     left: 0;
     right: 0;
     text-align: center;
@@ -458,24 +465,23 @@
   .parent-stops-container{
     width: 190px;
     margin-right: auto;
-    margin-top: 10px;
+    margin-top: 20px;
   }
 
   .sidebar{
-    height: 200px;
+    height: 95px;
     display: flex;
     align-items: flex-start;
     flex-direction: row;
     padding: 2px;
     padding-top: 40px;
     position: relative;
-    box-shadow: none;
   }
 
   .map-container{
     flex: 11;
     padding: 0px 5px;
-    margin-top: -20px;
+    margin-top: 60px;
   }
 
   .direction-button{
@@ -483,18 +489,19 @@
   }
 
   .stops-container{
-    width: 180px;
+    width: 170px;
     padding: 0px;
+    flex-direction: row-reverse;
   }
 
-  .stops-container .button{
-    padding: 4px 4px;
-    width: 50px;
+  .stop-button{
+    padding: 6px 4px;
   }
 
   .stops-input{
     width: 60px;
-    padding-left: 0px;
+    padding-left: 5px;
+    margin-left: 0px;
   }
 
   .location-icon{
@@ -502,26 +509,26 @@
   }
 
   .alert-block{
-    top: 125px;
-  }
-
-  .stops-input{
-    margin-left: 0px;
+    top: 100px;
   }
 
   .parent-button-group{
     width: 190px;
     margin-left: 5px;
-    margin-top: 7px;
+    margin-top: 20px;
   }
 
   .navigation-button{
     padding: 9px 10px !important;
-    margin: 6px 0px;
+    margin-top: 500px;
+    z-index: 120;
   }
 
   .direction-button{
     margin: 10px 0px;
+    margin-top: 995px;
+    width: 100%;
+    z-index: 120;
   }
 
   .parent-button-group .button{

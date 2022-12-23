@@ -29,7 +29,7 @@ function Sidebar() {
 
 
   let stops = [...myState.stops], steps = 1;
-  var timer = 0;
+  var timer = 0, isMobile = window.innerWidth <= 830? true: false;
 
   const hash = (i,j) => {
     return 2001*(i+1000)+(j+1000);
@@ -152,7 +152,7 @@ function Sidebar() {
         let xRatio = (myState.maxCities > 30 || myState.maxCities < 16)? 5: 4;
         let yRatio = myState.maxCities/xRatio
 
-        let r = Math.floor(Math.floor((uniqueCities.size/yRatio)*(n/xRatio)) + Math.floor(Math.random()*Math.floor(n/xRatio)));
+        let r = Math.floor(Math.floor(Math.floor(uniqueCities.size/yRatio)*(n/xRatio)) + Math.floor(Math.random()*Math.floor(n/xRatio)));
         let c = Math.floor((uniqueCities.size%yRatio)*(m/yRatio) + Math.floor(Math.random()*Math.floor(m/yRatio)));
         let has = hash(r,c);
 
@@ -259,7 +259,7 @@ function Sidebar() {
     let count = 0,oldRow = source.r,oldCol = source.c;
     myState.path.forEach((city) => {
         setTimeout(() => {
-            let transforms = `translate(${city.c*16 - 3}px, ${city.r*16 - 8}px) rotate(${rotate(oldRow,oldCol,city.r,city.c)}deg)`;
+            let transforms = `translate(${city.c*16 + (isMobile? -3: 2)}px, ${city.r*16 - (isMobile? 11: 1)}px) rotate(${rotate(oldRow,oldCol,city.r,city.c)}deg)`;
             document.getElementById('navigation-icon').style.transform = transforms;
             oldRow = city.r;
             oldCol = city.c;
@@ -300,6 +300,8 @@ function Sidebar() {
 
         showToast('Stop added successfully','success','filled',1);
         stops.push(stopPoint);
+        if(isMobile)
+            setShowEndRoute(true);
         dispatch({
             type: actionTypes.UPDATE_STOPS,
             stops: stops
@@ -334,11 +336,19 @@ function Sidebar() {
     setDisableNavigation(true);
     setDisableDirection(false);
     setAlertMessage('');
-    setSource('');
-    setDestination('');
     setActiveStep(1);
     setShowEndRoute(false);
+    
+    dispatch({
+        type: actionTypes.UPDATE_STOPS,
+        stops: []
+    })
 
+    if(myState.path.length === 0)
+        return;
+        
+    setSource('');
+    setDestination('');
     steps = 1;
     document.getElementById('navigation-icon').style.display = 'none';
 
@@ -357,10 +367,6 @@ function Sidebar() {
         path: []
     })
 
-    dispatch({
-        type: actionTypes.UPDATE_STOPS,
-        stops: []
-    })
 
     dispatch({
         type: actionTypes.UPDATE_SOURCE,
@@ -390,7 +396,7 @@ function Sidebar() {
         setShowEndRoute(true);
         let sourceCity = getCityFromCityName(source);
         document.getElementById('navigation-icon').style.display = 'block';
-        document.getElementById('navigation-icon').style.transform = `translate(${sourceCity.c*16 - 3}px, ${sourceCity.r*16 - 8}px)`;
+        document.getElementById('navigation-icon').style.transform = `translate(${sourceCity.c*16 + (isMobile? -3: 2)}px, ${sourceCity.r*16 - (isMobile? 11: 1)}px)`;
     }
   },[myState.path]);
 
@@ -437,8 +443,11 @@ function Sidebar() {
                 <div className="stops-input">
                     <input type="text" placeholder='add stop' value={stop} onChange={e => setStop(e.target.value)}/>
                 </div>
-                <button className={`button stop-button ${disableDirection && 'disable-button'}`} onClick={addStop}>Add</button>
-                <button className={`button stop-button ${disableDirection && 'disable-button'}`} onClick={resetStops}>Clear</button>
+                <button className={`button stop-button ${disableDirection && 'disable-button'}`} onClick={addStop}>{myState.maxCities < 20? 'Add Stop': 'Add'}</button>
+
+                {!isMobile &&
+                    <button className={`button stop-button ${disableDirection && 'disable-button'}`} onClick={resetStops}>Clear</button>
+                }
             </div>
 
             <div className="location">
