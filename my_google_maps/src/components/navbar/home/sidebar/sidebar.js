@@ -259,7 +259,7 @@ function Sidebar() {
     let count = 0,oldRow = source.r,oldCol = source.c;
     myState.path.forEach((city) => {
         setTimeout(() => {
-            let transforms = `translate(${city.c*16 + 2}px, ${city.r*16 + 2}px) rotate(${rotate(oldRow,oldCol,city.r,city.c)}deg)`;
+            let transforms = `translate(${city.c*16 - 3}px, ${city.r*16 - 3}px) rotate(${rotate(oldRow,oldCol,city.r,city.c)}deg)`;
             document.getElementById('navigation-icon').style.transform = transforms;
             oldRow = city.r;
             oldCol = city.c;
@@ -390,7 +390,7 @@ function Sidebar() {
         setShowEndRoute(true);
         let sourceCity = getCityFromCityName(source);
         document.getElementById('navigation-icon').style.display = 'block';
-        document.getElementById('navigation-icon').style.transform = `translate(${sourceCity.c*16 + 2}px, ${sourceCity.r*16 + 2}px)`;
+        document.getElementById('navigation-icon').style.transform = `translate(${sourceCity.c*16 - 3}px, ${sourceCity.r*16 - 3}px)`;
     }
   },[myState.path]);
 

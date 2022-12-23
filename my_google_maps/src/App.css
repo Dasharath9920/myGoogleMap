@@ -393,8 +393,9 @@
 @media only screen and (max-width: 830px){
 
   .navbar{
-    height: 7vh;
+    height: 50px;
     justify-content: space-between;
+    padding: 5px;
   }
 
   .navbar .navbar_content_block h1{
@@ -411,6 +412,7 @@
 
   .home{
     height: 93vh;
+    flex-direction: column;
   }
   
   .swap-button{
@@ -421,7 +423,7 @@
     position: absolute;
     margin-left: auto;
     margin-right: auto;
-    top: -10px;
+    top: 0px;
     left: 0;
     right: 0;
     text-align: center;
@@ -465,14 +467,14 @@
     align-items: flex-start;
     flex-direction: row;
     padding: 2px;
-    padding-top: 30px;
+    padding-top: 40px;
     position: relative;
     box-shadow: none;
   }
 
   .map-container{
     flex: 11;
-    margin-top: 60px;
+    padding: 5px;
   }
 
   .direction-button{
@@ -499,7 +501,7 @@
   }
 
   .alert-block{
-    top: -66vh;
+    top: 125px;
   }
 
   .stops-input{
@@ -514,7 +516,7 @@
 
   .navigation-button{
     padding: 9px 10px !important;
-    margin: 7px 0px;
+    margin: 6px 0px;
   }
 
   .direction-button{
