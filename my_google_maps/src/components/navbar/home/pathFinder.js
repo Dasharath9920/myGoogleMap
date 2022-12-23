@@ -10,7 +10,7 @@ function PathFinder() {
   const roads = myState.roads;
   const x_dir = [-1,-1,-1,0,0,1,1,1];
   const y_dir = [-1,0,1,-1,1,-1,0,1];
-  let count = 0, path = [];
+  let count = 0, path = [],speed = myState.cities.length < 20? 30: 10;
   var timeouts = [];
 
   let hash = (i,j) => {
@@ -106,7 +106,7 @@ function PathFinder() {
                 setTimeout(() => {
                     document.getElementById(hashKey).style.backgroundColor = 'grey';
                   },100);
-                },count*10));
+                },count*speed));
               count++;
             }
 
@@ -151,7 +151,7 @@ function PathFinder() {
 		});
 		window.alert("Sorry. Destination can't be reached");
       return false;
-    },count*10+100);
+    },count*speed+100);
   }
 
   const findShortestPath = async () => {
@@ -178,7 +178,7 @@ function PathFinder() {
           type: actionTypes.UPDATE_SHORTESTPATH,
           path: path
         })
-      },count*10 + 100);
+      },count*speed + 100);
       
   }
 
