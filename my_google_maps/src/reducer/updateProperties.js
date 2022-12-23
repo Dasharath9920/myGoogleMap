@@ -7,11 +7,11 @@ const initializer = {
     cities: [],
     path: [],
     stops: [],
-    mapSize: {n:50, m: 90},
+    mapSize: {n: 0, m: 0},
     roads: new Set(),
     navigate: false,
     findPath: false,
-    maxCities: 40
+    maxCities: 0
 };
 
 const updateProperties = (state=initializer, action) => {

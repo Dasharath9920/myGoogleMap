@@ -438,7 +438,7 @@ function Sidebar() {
                     <input type="text" placeholder='add stop' value={stop} onChange={e => setStop(e.target.value)}/>
                 </div>
                 <button className={`button stop-button ${disableDirection && 'disable-button'}`} onClick={addStop}>Add</button>
-                <button className={`button stop-button ${disableDirection && 'disable-button'}`} onClick={resetStops}>Reset</button>
+                <button className={`button stop-button ${disableDirection && 'disable-button'}`} onClick={resetStops}>Clear</button>
             </div>
 
             <div className="location">
@@ -450,7 +450,7 @@ function Sidebar() {
         <div className="parent-button-group">
             <button className={`button navigation-button ${disableNavigation && 'disable-button'}`} onClick={startNavigation}><DirectionsIcon className='location-icon'/> Start Navigation</button>
             <div className="button-group">
-                <button className={`button ${!showEndRoute && 'disable-button'}`} onClick={endRoute}>End Route</button>
+                <button className={`button ${!showEndRoute && 'disable-button'}`} onClick={endRoute}>{myState.maxCities < 20? 'Reset': 'Reset Map'}</button>
                 <button className={`button ${playNavigation && 'disable-button'}`} onClick={generateCities}>New Map</button>
             </div>
         </div>

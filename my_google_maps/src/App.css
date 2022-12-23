@@ -476,21 +476,21 @@
   }
 
   .direction-button{
-    width: 190px;
+    width: 175px;
   }
 
   .stops-container{
-    width: 190px;
+    width: 180px;
     padding: 0px;
   }
 
   .stops-container .button{
-    padding: 6px 8px;
-    width: 60px;
+    padding: 4px 4px;
+    width: 50px;
   }
 
   .stops-input{
-    width: 50px;
+    width: 60px;
     padding-left: 0px;
   }
 
@@ -509,10 +509,11 @@
   .parent-button-group{
     width: 190px;
     margin-left: 5px;
+    margin-top: 7px;
   }
 
   .navigation-button{
-    padding: 9px 20px !important;
+    padding: 9px 10px !important;
     margin: 7px 0px;
   }
 
