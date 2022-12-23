@@ -6,14 +6,14 @@
 
 .home{
   width: 100vw;
+  height: 100%;
   display: flex;
-  height: 92vh;
   position: relative;
 }
 
 .navbar{
   width: 100%;
-  height: 8vh;
+  height: 60px;
   display: flex;
   align-items: center;
   justify-content: space-around;
@@ -82,7 +82,8 @@
 }
 
 .sidebar{
-  flex: 1;
+  height: 100%;
+  width: 300px;
   display: flex;
   align-items: center;
   flex-direction: column;
@@ -149,7 +150,6 @@
 }
 
 .map-container{
-  flex: 5;
   padding: 10px;
   position: relative;
   display: flex;
@@ -322,8 +322,9 @@
     }
 
     .sidebar{
+      width: 100%;
       flex-direction: row;
-      align-items: center;
+      align-items: flex-start;
       justify-content: space-around;
     }
 
@@ -381,7 +382,7 @@
     }
 
     .parent-stops-container{
-      margin: 0px;
+      margin: 5px 0px;
     }
 
     .more-icon, .swap-button{
@@ -420,7 +421,7 @@
     position: absolute;
     margin-left: auto;
     margin-right: auto;
-    bottom: 80px;
+    top: -10px;
     left: 0;
     right: 0;
     text-align: center;
@@ -437,6 +438,7 @@
   
   .locations_container .location{
     width: 120px;
+    margin: 5px 0px;
   }
   
   .locations_container .location-search{
@@ -454,20 +456,23 @@
   .parent-stops-container{
     width: 190px;
     margin-right: auto;
+    margin-top: 10px;
   }
 
   .sidebar{
-    flex: 3;
+    height: 200px;
     display: flex;
-    align-items: flex-end;
+    align-items: flex-start;
     flex-direction: row;
     padding: 2px;
+    padding-top: 30px;
+    position: relative;
+    box-shadow: none;
   }
 
   .map-container{
     flex: 11;
     margin-top: 60px;
-    overflow: hidden;
   }
 
   .direction-button{
@@ -494,7 +499,7 @@
   }
 
   .alert-block{
-    top: 2px;
+    top: -66vh;
   }
 
   .stops-input{
@@ -517,21 +522,5 @@
 
   .parent-button-group .button{
     padding: 6px 8px;
-  }
-}
-
-@media only screen and (max-height: 690px) {
-  .sidebar{
-    flex: 4;
-    display: flex;
-    align-items: flex-end;
-    flex-direction: row;
-    padding: 2px;
-  }
-
-  .map-container{
-    flex: 11;
-    margin-top: 60px;
-    overflow: hidden;
   }
 }

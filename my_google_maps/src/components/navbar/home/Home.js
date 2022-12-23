@@ -66,7 +66,7 @@ function Home() {
       m = 50;
       maxCities = 20;
     }
-    else if(window.innerHeight < 690){
+    else if(window.innerHeight < 750){
       n = 22;
       m = 22;
       maxCities = 16
