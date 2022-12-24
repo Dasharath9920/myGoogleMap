@@ -254,9 +254,7 @@ function Sidebar() {
         })
     }
     else{
-        showToast('Invalid cities. Please choose cities from the map','warning','filled',4);
-        setSource('');
-        setDestination('');
+        showToast('Enter Source and Destination to get directions','warning','filled',4);
     }
   }
 
