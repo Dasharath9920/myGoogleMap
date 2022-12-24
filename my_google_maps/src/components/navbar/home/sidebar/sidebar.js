@@ -89,7 +89,6 @@ function Sidebar() {
     let city;
     try{
         city = Number(cityName);
-
         if(!city || cityName.length === 0 || city > myState.maxCities){
             throw new Error();
         }
@@ -97,12 +96,18 @@ function Sidebar() {
         city = undefined;
     };
 
+    if(city >= myState.maxCities)
+        return undefined;
+
     return city;
   }
 
   const changeSourceOrDestination = (city, stopType,cities = myState.cities) => {
       let cityName = isCityValid(city) || '';
       let src = source,dest = destination;
+
+      if(!cityName && city.length)
+        showToast("Choose cities from the map",'warning','filled',2);
 
       if(cityName || city.length === 0){
           if(stopType === 'source'){
