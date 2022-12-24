@@ -430,7 +430,7 @@
     position: absolute;
     margin-left: auto;
     margin-right: auto;
-    top: 10px;
+    top: 5px;
     left: 0;
     right: 0;
     text-align: center;
@@ -465,17 +465,18 @@
   .parent-stops-container{
     width: 190px;
     margin-right: auto;
-    margin-top: 20px;
+    margin-top: 15px;
   }
 
   .sidebar{
-    height: 95px;
+    height: 86px;
     display: flex;
     align-items: flex-start;
     flex-direction: row;
     padding: 2px;
     padding-top: 40px;
     position: relative;
+    box-shadow: 0.1px 0px 2px 1px rgb(202, 202, 202);
   }
 
   .map-container{
@@ -509,24 +510,24 @@
   }
 
   .alert-block{
-    top: 100px;
+    top: 88px;
   }
 
   .parent-button-group{
     width: 190px;
     margin-left: 5px;
-    margin-top: 20px;
+    margin-top: 15px;
   }
 
   .navigation-button{
     padding: 9px 10px !important;
-    margin-top: 500px;
+    margin-top: 487px;
     z-index: 120;
   }
 
   .direction-button{
     margin: 10px 0px;
-    margin-top: 995px;
+    margin-top: 970px;
     width: 100%;
     z-index: 120;
   }

@@ -224,6 +224,7 @@ function Sidebar() {
         setPlayNavigation(true);
         setDisableDirection(true);
         setShowLoader(true);
+        setShowEndRoute(false);
         showToast('Finding the best route for you. Please wait','info','filled');
         
         let stops = myState.stops.filter(stop => stop !== src && stop !== dest);
@@ -264,7 +265,7 @@ function Sidebar() {
     setShowEndRoute(false);
     showToast(' ','warning','filled');
 
-    let count = 0,oldRow = source.r,oldCol = source.c;
+    let count = 0,oldRow = source.r,oldCol = source.c, speed = isMobile? 200: 150;
     myState.path.forEach((city) => {
         setTimeout(() => {
             let transforms = `translate(${city.c*16 + (isMobile? -3: 2)}px, ${city.r*16 - (isMobile? 11: 1)}px) rotate(${rotate(oldRow,oldCol,city.r,city.c)}deg)`;
@@ -276,7 +277,7 @@ function Sidebar() {
                 if(!isACityWithCoordinates(city.r, city.c))
                     document.getElementById(hash(city.r, city.c)).style.backgroundColor = 'rgb(95, 165, 231)';
             },100);
-        },count*150);
+        },count*speed);
         count++;
       });
 
@@ -285,7 +286,7 @@ function Sidebar() {
         setShowEndRoute(true);
         ++steps;
         setActiveStep(steps);
-    },count*150);
+    },count*speed);
   }
 
   const addStop = () => {
@@ -402,6 +403,7 @@ function Sidebar() {
         setAlertMessage('');
     }
     else{
+        setShowEndRoute(true);
         setDisableNavigation(false);
         setAlertMessage('');
         setShowEndRoute(true);
