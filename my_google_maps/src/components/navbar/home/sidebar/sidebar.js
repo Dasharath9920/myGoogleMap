@@ -96,7 +96,7 @@ function Sidebar() {
         city = undefined;
     };
 
-    if(city >= myState.maxCities)
+    if(city > myState.maxCities)
         return undefined;
 
     return city;
