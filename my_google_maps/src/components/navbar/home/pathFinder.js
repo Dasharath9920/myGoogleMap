@@ -13,7 +13,8 @@ function PathFinder() {
   let count = 0, path = [],speed = myState.cities.length < 20? 30: 10;
   var timeouts = [];
 
-  let hash = (i,j) => {
+  // Return unique hash of two values which can be used as an id for each map block
+  const hash = (i,j) => {
     return 2001*(i+1000)+(j+1000);
   }
 
@@ -29,9 +30,10 @@ function PathFinder() {
   }
 
   const isSafeToConstruct = (r,c) => {
-    return r >= 0 && c >= 0 && r < 50 && c < 90;
+    return r >= 0 && c >= 0 && r < myState.mapSize.n && c < myState.mapSize.m;
   }
 
+  // Checks whether given coordinates belongs to city or road
   const isRoadOrCity = (r,c) => {
     return roads.has(hash(r,c)) || isACityWithCoordinates(r,c);
   }
@@ -42,6 +44,7 @@ function PathFinder() {
     return dx + dy + (d-2)*Math.min(dx,dy);
   }
 
+  // Reset color of each block
   const resetSearchedBlocks = () => {
     for(let i = 0; i < myState.mapSize.n; i++){
       for(let j = 0; j < myState.mapSize.m; j++){
@@ -53,6 +56,7 @@ function PathFinder() {
     }
   }
 
+  // It build path from source to destination and append it to final path
   const buildPath = (parentBlocks, source, destination) => {
     let currentPath = [];
     let row = destination.r, col = destination.c;
@@ -70,12 +74,14 @@ function PathFinder() {
     path = [...currentPath];
   }
 
+  // A* algorithm to find shortest distance between source and destination
   const findPath =  (sourceCity, destinationCity) => {
     let source = getCityFromCityName(sourceCity);
     let destination = getCityFromCityName(destinationCity);
     let blocks = [];
     let cost = {}, parentBlocks = {};
     
+    // Initially store cost of each city as Infinity
     for(let i = 0; i < myState.mapSize.n; i++){
       for(let j = 0; j < myState.mapSize.m; j++){
         let hashKey = hash(i,j);
@@ -98,88 +104,99 @@ function PathFinder() {
         let newCol = currentBlock.c + y_dir[k];
         let hashKey = hash(newRow, newCol);
         
+        // Store only those blocks which are either cities or roads
         if(isSafeToConstruct(newRow, newCol) && isRoadOrCity(newRow, newCol)){
 
           if(!isACityWithCoordinates(newRow, newCol)){
-			        timeouts.push(setTimeout(() => {
-                document.getElementById(hashKey).style.backgroundColor = 'blue';
-                setTimeout(() => {
-                    document.getElementById(hashKey).style.backgroundColor = 'grey';
-                  },100);
-                },count*speed));
-              count++;
-            }
+            timeouts.push(setTimeout(() => {
+              document.getElementById(hashKey).style.backgroundColor = 'blue';
+              setTimeout(() => {
+                  document.getElementById(hashKey).style.backgroundColor = 'grey';
+                },100);
+              },count*speed));
+            count++;
+          }
 
-                if(isACityWithCoordinates(newRow, newCol)){
-                    if(newRow === destination.r && newCol === destination.c){
-                        parentBlocks[hashKey] = {r: currentBlock.r, c: currentBlock.c};
-                        buildPath(parentBlocks,source, destination);
-                        return true;
-                    }
-                }
-
-                let newG = currentBlock.g + 1;
-                let h = calculateHeuristicValue(newRow, newCol, destination);
-                let newF = newG + h;
-                if(cost[hashKey] > newF){
-                    parentBlocks[hashKey] = {r: currentBlock.r, c: currentBlock.c};
-                    blocks.push({
-                        g: newG,
-                        f: newF,
-                        r: newRow,
-                        c: newCol
-                    });
-                    cost[hashKey] = newF;
-                    blocks.sort(function(x, y) {
-                        if (x.f < y.f) {
-                          return -1;
-                        }
-                        if (x.f > y.f) {
-                          return 1;
-                        }
-                        return 0;
-                      });
-                }
+          // Once destination is reached, build path and add to final path
+          if(isACityWithCoordinates(newRow, newCol)){
+            if(newRow === destination.r && newCol === destination.c){
+              parentBlocks[hashKey] = {r: currentBlock.r, c: currentBlock.c};
+              buildPath(parentBlocks,source, destination);
+              return true;
             }
+          }
+
+          let newG = currentBlock.g + 1;
+          let h = calculateHeuristicValue(newRow, newCol, destination);
+          let newF = newG + h;
+
+          if(cost[hashKey] > newF){
+            cost[hashKey] = newF;
+            parentBlocks[hashKey] = {r: currentBlock.r, c: currentBlock.c};
+            blocks.push({
+                g: newG,
+                f: newF,
+                r: newRow,
+                c: newCol
+            });
+            blocks.sort(function(x, y) {
+              if (x.f < y.f) {
+                return -1;
+              }
+              if (x.f > y.f) {
+                return 1;
+              }
+              return 0;
+            });
+          }
+        }
       }
     }
-	
+
+    // If it reaches here, it means no path found between source and destination
     setTimeout(() => {
-		dispatch({
-		  type: actionTypes.UPDATE_SHORTESTPATH,
-		  path: []
-		});
-		window.alert("Sorry. Destination can't be reached");
-      return false;
+      dispatch({
+        type: actionTypes.UPDATE_SHORTESTPATH,
+        path: []
+      });
+
+      window.alert("Sorry. Destination can't be reached");
     },count*speed+100);
+
+    return false;
   }
 
   const findShortestPath = async () => {
+
+    // Add source and destination to the stops list
     let stops = [...myState.stops];
     stops.unshift(myState.source);
     stops.push(myState.destination);
 
-    let i = 1;
-    for(; i < stops.length && findPath(stops[i-1],stops[i]); i++);
-    if(i < stops.length)
+    // Find path between every two adjacent stops
+    let stopIndex;
+    for(; stopIndex < stops.length && findPath(stops[stopIndex-1],stops[stopIndex]); stopIndex++);
+
+    // If no path found to any stop, return
+    if(stopIndex < stops.length)
       return;
 
     path.reverse();
 
+    // Color path and update path in Redux
     setTimeout(() => {
-        resetSearchedBlocks();
-        path.forEach(city => {
-            if(!isACityWithCoordinates(city.r, city.c)){
-              document.getElementById(hash(city.r, city.c)).style.backgroundColor = 'rgb(102, 187, 140)';
-            }
-          });
-          
-        dispatch({
-          type: actionTypes.UPDATE_SHORTESTPATH,
-          path: path
-        })
-      },count*speed + 100);
-      
+      resetSearchedBlocks();
+      path.forEach(city => {
+        if(!isACityWithCoordinates(city.r, city.c)){
+          document.getElementById(hash(city.r, city.c)).style.backgroundColor = 'rgb(102, 187, 140)';
+        }
+      });
+        
+      dispatch({
+        type: actionTypes.UPDATE_SHORTESTPATH,
+        path: path
+      })
+    },count*speed + 100);  
   }
 
   useEffect(() => {

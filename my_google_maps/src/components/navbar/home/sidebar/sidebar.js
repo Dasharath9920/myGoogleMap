@@ -10,97 +10,99 @@ import { Alert, LinearProgress, Stepper, Step, StepLabel } from '@mui/material';
 
 function Sidebar() {
 
-  const myState = useSelector(state => state.updateProperties);
-  const dispatch = useDispatch();
+    const myState = useSelector(state => state.updateProperties);
+    const dispatch = useDispatch();
 
-  const [source, setSource] = useState('');
-  const [destination, setDestination] = useState('');
-  const [stop, setStop] = useState('');
-  const [playNavigation, setPlayNavigation] = useState(false);
-  const [disableNavigation, setDisableNavigation] = useState(true);
-  const [disableDirection, setDisableDirection] = useState(false);
-  const [alertMessage, setAlertMessage] = useState('');
-  const [alertType, setAlertType] = useState('info');
-  const [showLoader, setShowLoader] = useState(false);
-  const [showStepper, setShowStepper] = useState(false);
-  const [showEndRoute, setShowEndRoute] = useState(false);
-  const [activeStep, setActiveStep] = useState(1);
-  const [alertVariant, setAlertVariant] = useState('filled');
+    const [source, setSource] = useState('');
+    const [destination, setDestination] = useState('');
+    const [stop, setStop] = useState('');
+    const [playNavigation, setPlayNavigation] = useState(false);
+    const [disableNavigation, setDisableNavigation] = useState(true);
+    const [disableDirection, setDisableDirection] = useState(false);
+    const [alertMessage, setAlertMessage] = useState('');
+    const [alertType, setAlertType] = useState('info');
+    const [showLoader, setShowLoader] = useState(false);
+    const [showStepper, setShowStepper] = useState(false);
+    const [ShowResetButton, setShowResetButton] = useState(false);
+    const [activeStep, setActiveStep] = useState(1);
+    const [alertVariant, setAlertVariant] = useState('filled');
 
+    let stops = [...myState.stops], stopsReached = 1;
+    var timer = 0, isMobile = window.innerWidth <= 830? true: false;
 
-  let stops = [...myState.stops], steps = 1;
-  var timer = 0, isMobile = window.innerWidth <= 830? true: false;
-
-  const hash = (i,j) => {
-    return 2001*(i+1000)+(j+1000);
-  }
-
-  const showToast = (message, type, variant, duration = 0) => {
-    setAlertMessage(message);
-    setAlertType(type);
-    setAlertVariant(variant);
-
-    if(duration > 0){
-        if(timer)
-            clearTimeout(timer);
-
-        timer = setTimeout(() => {
-            setAlertMessage('');
-        },duration*1000);
+    const hash = (i,j) => {
+        return 2001*(i+1000)+(j+1000);
     }
-  }
 
-  const rotate = (oldRow, oldCol, newRow, newCol) => {
-    if(oldRow < newRow){
-        if(oldCol < newCol)
-            return 135;
-        return oldCol === newCol ? 180: 225;
-    }
-    else if(oldRow === newRow){
-        if(oldCol === newCol)
-            return 0;
-        return oldCol < newCol ? 90: 270;
-    }
-    else{
-        if(oldCol < newCol)
-            return 45;
-        return oldCol === newCol ? 0: 315;
-    }
-  }
+    // Display toast with given message, type, variant and duration
+    const showToast = (message, type, variant, duration = 0) => {
+        setAlertMessage(message);
+        setAlertType(type);
+        setAlertVariant(variant);
 
-  const isACityWithCoordinates = (row, col) => {
-    return myState.cities.some(city => city.r === row && city.c === col);
-  }
+        if(duration > 0){
+            if(timer)
+                clearTimeout(timer);
+
+            timer = setTimeout(() => {
+                setAlertMessage('');
+            },duration*1000);
+        }
+    }
+
+    // Rotates navigation icon in the direction of new coordinates
+    const rotate = (oldRow, oldCol, newRow, newCol) => {
+        if(oldRow < newRow){
+            if(oldCol < newCol)
+                return 135;
+            return oldCol === newCol ? 180: 225;
+        }
+        else if(oldRow === newRow){
+            if(oldCol === newCol)
+                return 0;
+            return oldCol < newCol ? 90: 270;
+        }
+        else{
+            if(oldCol < newCol)
+                return 45;
+            return oldCol === newCol ? 0: 315;
+        }
+    }
+
+    const isACityWithCoordinates = (row, col) => {
+        return myState.cities.some(city => city.r === row && city.c === col);
+    }
 
     const getCityFromCityName = (cityName,cities = myState.cities) => {
         return cities.find(currentCity => currentCity.cityName === cityName);
     }
 
-  const checkStop = (row, col) => {
-    let currentStop = getCityFromCityName(myState.stops[steps-1]);
-    if(currentStop?.r === row && currentStop?.c === col){
-        ++steps;
-        setActiveStep(steps);
-        document.getElementById(hash(row, col)).style.backgroundColor = 'darkorange';
-    }
-  }
-
-  const isCityValid = (cityName) => {
-    let city;
-    try{
-        city = Number(cityName);
-        if(!city || cityName.length === 0 || city > myState.maxCities){
-            throw new Error();
+    // Checks if current city reached is next stop and color it if so
+    const checkStop = (row, col) => {
+        let currentStop = getCityFromCityName(myState.stops[stopsReached-1]);
+        if(currentStop?.r === row && currentStop?.c === col){
+            ++stopsReached;
+            setActiveStep(stopsReached);
+            document.getElementById(hash(row, col)).style.backgroundColor = 'darkorange';
         }
-    } catch(e){
-        city = undefined;
-    };
+    }
 
-    if(city > myState.maxCities)
-        return undefined;
+    const isCityValid = (cityName) => {
+        let city;
+        try{
+            city = Number(cityName);
+            if(!city || cityName.length === 0 || city > myState.maxCities){
+                throw new Error();
+            }
+        } catch(e){
+            city = undefined;
+        };
 
-    return city;
-  }
+        if(city > myState.maxCities)
+            return undefined;
+
+        return city;
+    }
 
   const changeSourceOrDestination = (city, stopType,cities = myState.cities) => {
       let cityName = isCityValid(city) || '';
@@ -145,29 +147,32 @@ function Sidebar() {
     setShowStepper(false);
     setDisableNavigation(true);
     setDisableDirection(false);
-    setShowEndRoute(false);
+    setShowResetButton(false);
     setAlertMessage('');
     setActiveStep(1);
 
-    steps = 1;
+    stopsReached = 1;
     document.getElementById('navigation-icon').style.display = 'none';
 
     let uniqueCities = new Set()
     let citiesGenerated = [], n = myState.mapSize.n, m = myState.mapSize.m;
+
+    // Use number of rows and columns to populate the map with cities
     while(uniqueCities.size < myState.maxCities){
         let xRatio = (myState.maxCities > 30 || myState.maxCities < 16)? 5: 4;
         let yRatio = myState.maxCities/xRatio
 
-        let r = Math.floor(Math.floor(Math.floor(uniqueCities.size/yRatio)*(n/xRatio)) + Math.floor(Math.random()*Math.floor(n/xRatio)));
-        let c = Math.floor((uniqueCities.size%yRatio)*(m/yRatio) + Math.floor(Math.random()*Math.floor(m/yRatio)));
-        let has = hash(r,c);
+        // Little trick to cover entire map with cities
+        let row = Math.floor(Math.floor(Math.floor(uniqueCities.size/yRatio)*(n/xRatio)) + Math.floor(Math.random()*Math.floor(n/xRatio)));
+        let col = Math.floor((uniqueCities.size%yRatio)*(m/yRatio) + Math.floor(Math.random()*Math.floor(m/yRatio)));
+        let has = hash(row,col);
 
         if(!uniqueCities.has(has)){
             uniqueCities.add(has);
             citiesGenerated.push({
                 cityName: uniqueCities.size,
-                r: r,
-                c: c
+                r: row,
+                c: col
             })
         }
     }
@@ -178,11 +183,13 @@ function Sidebar() {
     })
 
     if(stops.length > 0)
-        setShowEndRoute(true);
+        setShowResetButton(true);
     
     setTimeout((cities = citiesGenerated) => {
         changeSourceOrDestination(source,'source',cities);
         changeSourceOrDestination(destination,'destination',cities);
+
+        // Color stops
         stops.forEach(stop => {
             let stopCity = getCityFromCityName(stop, citiesGenerated);
             document.getElementById(hash(stopCity.r, stopCity.c)).style.backgroundColor = 'rgb(252, 191, 48)';
@@ -190,6 +197,7 @@ function Sidebar() {
     })
   }
 
+  // Swap source and destination inputs
   const swapLocations = () => {
     if(disableDirection)
         return;
@@ -218,6 +226,7 @@ function Sidebar() {
 
     let src = isCityValid(source), dest = isCityValid(destination);
     if(src && dest){
+        // Ignore if Navigation is playing
         if(playNavigation)
             return;
 
@@ -229,7 +238,7 @@ function Sidebar() {
         setPlayNavigation(true);
         setDisableDirection(true);
         setShowLoader(true);
-        setShowEndRoute(false);
+        setShowResetButton(false);
         showToast('Finding the best route for you. Please wait','info','filled');
         
         let stops = myState.stops.filter(stop => stop !== src && stop !== dest);
@@ -259,40 +268,45 @@ function Sidebar() {
   }
 
   const startNavigation = () => {
+    // Ignore if Navigation button is disabled
     if(disableNavigation)
         return;
     
     setDisableNavigation(true);
     setPlayNavigation(true);
     setShowStepper(true);
-    setShowEndRoute(false);
+    setShowResetButton(false);
     showToast(' ','warning','filled');
 
     let count = 0,oldRow = source.r,oldCol = source.c, speed = isMobile? 200: 150;
     myState.path.forEach((city) => {
         setTimeout(() => {
-            let transforms = `translate(${city.c*16 + (isMobile? -3: 2)}px, ${city.r*16 - (isMobile? 11: 1)}px) rotate(${rotate(oldRow,oldCol,city.r,city.c)}deg)`;
-            document.getElementById('navigation-icon').style.transform = transforms;
+            let transform = `translate(${city.c*16 + (isMobile? -3: 2)}px, ${city.r*16 - (isMobile? 11: 1)}px) rotate(${rotate(oldRow,oldCol,city.r,city.c)}deg)`;
+            document.getElementById('navigation-icon').style.transform = transform;
+
             oldRow = city.r;
             oldCol = city.c;
             setTimeout(() => {
                 if(isACityWithCoordinates(city.r, city.c) && checkStop(city.r, city.c));
+                // Color if stop is reached
                 if(!isACityWithCoordinates(city.r, city.c))
                     document.getElementById(hash(city.r, city.c)).style.backgroundColor = 'rgb(95, 165, 231)';
             },100);
         },count*speed);
         count++;
-      });
+    });
 
     setTimeout(() => {
         setPlayNavigation(false);
-        setShowEndRoute(true);
-        ++steps;
-        setActiveStep(steps);
+        setShowResetButton(true);
+
+        ++stopsReached;
+        setActiveStep(stopsReached);
     },count*speed);
   }
 
   const addStop = () => {
+      // Ignore if it is finding directions
       if(disableDirection)
         return;
 
@@ -318,7 +332,7 @@ function Sidebar() {
         document.getElementById(hash(stopCity.r, stopCity.c)).style.backgroundColor = 'rgb(252, 191, 48)';
 
         if(isMobile)
-            setShowEndRoute(true);
+            setShowResetButton(true);
         dispatch({
             type: actionTypes.UPDATE_STOPS,
             stops: stops
@@ -331,6 +345,7 @@ function Sidebar() {
   }
 
   const resetStops = () => {
+    // Ignore if it is finding directions
     if(disableDirection)
         return;
         
@@ -347,7 +362,7 @@ function Sidebar() {
 
   const resetInputs = () => {
 
-    if(!showEndRoute)
+    if(!ShowResetButton)
         return;
 
     setShowStepper(false);
@@ -355,13 +370,14 @@ function Sidebar() {
     setDisableDirection(false);
     setAlertMessage('');
     setActiveStep(1);
-    setShowEndRoute(false);
+    setShowResetButton(false);
     setSource('');
     setDestination('');
     
-    steps = 1;
+    stopsReached = 1;
     document.getElementById('navigation-icon').style.display = 'none';
     
+    // Reset colors of cities and path generated
     myState.cities.forEach(city => document.getElementById(hash(city.r, city.c)).style.backgroundColor = 'yellow');
     myState.path.forEach(city => {
         if(!isACityWithCoordinates(city.r, city.c))
@@ -369,8 +385,8 @@ function Sidebar() {
     })
 
     let sourceCity = getCityFromCityName(source);
-    document.getElementById(hash(sourceCity.r, sourceCity.c)).style.backgroundColor = 'yellow';
     let destinationCity = getCityFromCityName(destination);
+    document.getElementById(hash(sourceCity.r, sourceCity.c)).style.backgroundColor = 'yellow';
     document.getElementById(hash(destinationCity.r, destinationCity.c)).style.backgroundColor = 'yellow';
     
     dispatch({
@@ -401,15 +417,17 @@ function Sidebar() {
   useEffect(() => {
     setShowLoader(false);
     setPlayNavigation(false);
+
     if(myState.path.length === 0){
         setDisableNavigation(true);
         setAlertMessage('');
     }
     else{
-        setShowEndRoute(true);
+        setShowResetButton(true);
         setDisableNavigation(false);
         setAlertMessage('');
-        setShowEndRoute(true);
+        setShowResetButton(true);
+        
         let sourceCity = getCityFromCityName(source);
         document.getElementById('navigation-icon').style.display = 'block';
         document.getElementById('navigation-icon').style.transform = `translate(${sourceCity.c*16 + (isMobile? -3: 2)}px, ${sourceCity.r*16 - (isMobile? 11: 1)}px)`;
@@ -475,7 +493,7 @@ function Sidebar() {
         <div className="parent-button-group">
             <button className={`button navigation-button ${disableNavigation && 'disable-button'}`} onClick={startNavigation}><DirectionsIcon className='location-icon'/> Start Navigation</button>
             <div className="button-group">
-                <button className={`button ${!showEndRoute && 'disable-button'}`} onClick={resetInputs}>{myState.maxCities < 20? 'Reset': 'Reset Map'}</button>
+                <button className={`button ${!ShowResetButton && 'disable-button'}`} onClick={resetInputs}>{myState.maxCities < 20? 'Reset': 'Reset Map'}</button>
                 <button className={`button ${playNavigation && 'disable-button'}`} onClick={generateCities}>New Map</button>
             </div>
         </div>

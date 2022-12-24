@@ -9,6 +9,8 @@ function Map() {
   const dispatch = useDispatch();
 
   const grid = [...myState.map];
+
+  // Use (-1,-1) twice just to populate with dense roads
   const x_dir = [-1,0,0,1,-1,-1,1,1];
   const y_dir = [0,-1,1,0,-1,-1,-1,1];
 
@@ -29,6 +31,7 @@ function Map() {
     }
   }
 
+  // Color cities
   const constructCities = () => {
    myState.cities.forEach((block) => {
       let key = hash(block.r, block.c);
@@ -54,6 +57,7 @@ function Map() {
     return r >= 0 && c >= 0 && r < myState.mapSize.n && c <myState.mapSize.m;
   }
 
+  // Color roads
   const buildRoad = (row, col, parentBlocks, roads, source) => {
     if(getCityWithCoordinates(row,col))
       return;
@@ -72,6 +76,7 @@ function Map() {
     roads.add(key);
   }
 
+  // Checks if we have road passing adjacent to current block
   const hasNearByRoad = (roads,row,col,blocksVisited) => {
     for(let k = 0; k < 4; k++){
       let newRow = row + x_dir[k];
@@ -95,7 +100,8 @@ function Map() {
     });
     blocksVisited.add(hash(city.r, city.c));
 
-    while(connectedCities[city.cityName].length < 2 && grid.length > 0){
+    // For each city, connect with maximum 3 other cities
+    while(connectedCities[city.cityName].length < 3 && grid.length > 0){
       let currentBlock = grid.shift();
 
       for(let k = Math.floor(Math.random()*8), count = 0; count < 8; count++, k = (k+1)%8){
@@ -124,6 +130,7 @@ function Map() {
     }
   }
 
+  // Construct Roads between cities starting with random city to avoid similar maps
   const constructRoads = () => {
     let city = getRandomCity();
     let roads = new Set();
@@ -132,7 +139,8 @@ function Map() {
 
     for(let i = 0; i < myState.cities.length; i++){
       connectThreeCitiesTo(city,connectedCities,roads);
-      let nextCity = city.cityName === myState.maxCities? 1: city.cityName + 1;
+
+      let nextCity = (city.cityName === myState.maxCities)? 1: city.cityName + 1;
       city = myState.cities.find(currentCity => currentCity.cityName === nextCity);
     }
 

@@ -11,6 +11,7 @@ function Home() {
 
   var n = myState.mapSize.n, m = myState.mapSize.m, maxCities = myState.maxCities,prevWidth = -1;
 
+  // 2D array of size n x m for blocks of map
   const generateMap = () => {
     let grid = [];
     for(let i = 0; i < n; i++){
@@ -41,6 +42,8 @@ function Home() {
   }
 
   const handleWidth = () => {
+
+    // If width doesn't change, avoid re-creating the map
     if(window.innerWidth === prevWidth)
       return;
     
@@ -76,6 +79,7 @@ function Home() {
       m = 21;
       maxCities = 15;
     }
+    
     generateMap();
   }
 
