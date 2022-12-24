@@ -174,7 +174,7 @@ function PathFinder() {
     stops.push(myState.destination);
 
     // Find path between every two adjacent stops
-    let stopIndex;
+    let stopIndex = 1;
     for(; stopIndex < stops.length && findPath(stops[stopIndex-1],stops[stopIndex]); stopIndex++);
 
     // If no path found to any stop, return
