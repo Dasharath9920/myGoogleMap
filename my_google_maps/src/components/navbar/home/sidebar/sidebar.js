@@ -76,11 +76,12 @@ function Sidebar() {
         return cities.find(currentCity => currentCity.cityName === cityName);
     }
 
-  const isAStop = (row, col) => {
+  const checkStop = (row, col) => {
     let currentStop = getCityFromCityName(myState.stops[steps-1]);
     if(currentStop?.r === row && currentStop?.c === col){
         ++steps;
         setActiveStep(steps);
+        document.getElementById(hash(row, col)).style.backgroundColor = 'darkorange';
     }
   }
 
@@ -124,11 +125,11 @@ function Sidebar() {
 
         if(src){
           let sourceCity = getCityFromCityName(src,cities);
-          document.getElementById(hash(sourceCity.r, sourceCity.c)).style.backgroundColor = 'green';
+          document.getElementById(hash(sourceCity.r, sourceCity.c)).style.backgroundColor = 'rgb(102, 187, 140)';
         }
         if(dest){
           let destinationCity = getCityFromCityName(dest,cities);
-          document.getElementById(hash(destinationCity.r, destinationCity.c)).style.backgroundColor = 'red';
+          document.getElementById(hash(destinationCity.r, destinationCity.c)).style.backgroundColor = 'rgb(234, 131, 131)';
         }
   }
 
@@ -171,9 +172,16 @@ function Sidebar() {
         cities: citiesGenerated
     })
 
+    if(stops.length > 0)
+        setShowEndRoute(true);
+    
     setTimeout((cities = citiesGenerated) => {
         changeSourceOrDestination(source,'source',cities);
         changeSourceOrDestination(destination,'destination',cities);
+        stops.forEach(stop => {
+            let stopCity = getCityFromCityName(stop, citiesGenerated);
+            document.getElementById(hash(stopCity.r, stopCity.c)).style.backgroundColor = 'rgb(252, 191, 48)';
+        })
     })
   }
 
@@ -263,9 +271,10 @@ function Sidebar() {
             document.getElementById('navigation-icon').style.transform = transforms;
             oldRow = city.r;
             oldCol = city.c;
-            if(isACityWithCoordinates(city.r, city.c) && isAStop(city.r, city.c));
             setTimeout(() => {
-                document.getElementById(hash(city.r, city.c)).style.backgroundColor = isACityWithCoordinates(city.r,city.c)? 'yellow': 'rgb(95, 165, 231)';
+                if(isACityWithCoordinates(city.r, city.c) && checkStop(city.r, city.c));
+                if(!isACityWithCoordinates(city.r, city.c))
+                    document.getElementById(hash(city.r, city.c)).style.backgroundColor = 'rgb(95, 165, 231)';
             },100);
         },count*150);
         count++;
@@ -300,12 +309,17 @@ function Sidebar() {
 
         showToast('Stop added successfully','success','filled',1);
         stops.push(stopPoint);
+
+        let stopCity = getCityFromCityName(stopPoint);
+        document.getElementById(hash(stopCity.r, stopCity.c)).style.backgroundColor = 'rgb(252, 191, 48)';
+
         if(isMobile)
             setShowEndRoute(true);
         dispatch({
             type: actionTypes.UPDATE_STOPS,
             stops: stops
         })
+
         setStop('');
     }catch(e){
         showToast(e.message,'warning','filled',4);
@@ -327,7 +341,7 @@ function Sidebar() {
     }
   }
 
-  const endRoute = () => {
+  const resetInputs = () => {
 
     if(!showEndRoute)
         return;
@@ -338,20 +352,13 @@ function Sidebar() {
     setAlertMessage('');
     setActiveStep(1);
     setShowEndRoute(false);
-    
-    dispatch({
-        type: actionTypes.UPDATE_STOPS,
-        stops: []
-    })
-
-    if(myState.path.length === 0)
-        return;
-        
     setSource('');
     setDestination('');
+    
     steps = 1;
     document.getElementById('navigation-icon').style.display = 'none';
-
+    
+    myState.cities.forEach(city => document.getElementById(hash(city.r, city.c)).style.backgroundColor = 'yellow');
     myState.path.forEach(city => {
         if(!isACityWithCoordinates(city.r, city.c))
             document.getElementById(hash(city.r, city.c)).style.backgroundColor = 'lightgrey';
@@ -361,12 +368,16 @@ function Sidebar() {
     document.getElementById(hash(sourceCity.r, sourceCity.c)).style.backgroundColor = 'yellow';
     let destinationCity = getCityFromCityName(destination);
     document.getElementById(hash(destinationCity.r, destinationCity.c)).style.backgroundColor = 'yellow';
-
+    
     dispatch({
         type: actionTypes.UPDATE_SHORTESTPATH,
         path: []
     })
-
+    
+    dispatch({
+        type: actionTypes.UPDATE_STOPS,
+        stops: []
+    })
 
     dispatch({
         type: actionTypes.UPDATE_SOURCE,
@@ -459,7 +470,7 @@ function Sidebar() {
         <div className="parent-button-group">
             <button className={`button navigation-button ${disableNavigation && 'disable-button'}`} onClick={startNavigation}><DirectionsIcon className='location-icon'/> Start Navigation</button>
             <div className="button-group">
-                <button className={`button ${!showEndRoute && 'disable-button'}`} onClick={endRoute}>{myState.maxCities < 20? 'Reset': 'Reset Map'}</button>
+                <button className={`button ${!showEndRoute && 'disable-button'}`} onClick={resetInputs}>{myState.maxCities < 20? 'Reset': 'Reset Map'}</button>
                 <button className={`button ${playNavigation && 'disable-button'}`} onClick={generateCities}>New Map</button>
             </div>
         </div>
