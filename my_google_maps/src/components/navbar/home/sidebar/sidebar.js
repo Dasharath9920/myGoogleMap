@@ -331,8 +331,7 @@ function Sidebar() {
         let stopCity = getCityFromCityName(stopPoint);
         document.getElementById(hash(stopCity.r, stopCity.c)).style.backgroundColor = 'rgb(252, 191, 48)';
 
-        if(isMobile)
-            setShowResetButton(true);
+        setShowResetButton(true);
         dispatch({
             type: actionTypes.UPDATE_STOPS,
             stops: stops
@@ -386,8 +385,10 @@ function Sidebar() {
 
     let sourceCity = getCityFromCityName(source);
     let destinationCity = getCityFromCityName(destination);
-    document.getElementById(hash(sourceCity.r, sourceCity.c)).style.backgroundColor = 'yellow';
-    document.getElementById(hash(destinationCity.r, destinationCity.c)).style.backgroundColor = 'yellow';
+    if(sourceCity)
+        document.getElementById(hash(sourceCity.r, sourceCity.c)).style.backgroundColor = 'yellow';
+    if(destinationCity)
+        document.getElementById(hash(destinationCity.r, destinationCity.c)).style.backgroundColor = 'yellow';
     
     dispatch({
         type: actionTypes.UPDATE_SHORTESTPATH,
