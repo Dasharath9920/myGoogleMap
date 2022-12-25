@@ -196,7 +196,7 @@ function PathFinder() {
         type: actionTypes.UPDATE_SHORTESTPATH,
         path: path
       })
-    },count*speed + 100);  
+    },count*speed + 200);  
   }
 
   useEffect(() => {
