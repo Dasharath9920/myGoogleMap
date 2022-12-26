@@ -11,7 +11,6 @@ function PathFinder() {
   const x_dir = [-1,-1,-1,0,0,1,1,1];
   const y_dir = [-1,0,1,-1,1,-1,0,1];
   let count = 0, path = [],speed = myState.cities.length < 20? 30: 10;
-  var timeouts = [];
 
   // Return unique hash of two values which can be used as an id for each map block
   const hash = (i,j) => {
@@ -108,12 +107,12 @@ function PathFinder() {
         if(isSafeToConstruct(newRow, newCol) && isRoadOrCity(newRow, newCol)){
 
           if(!isACityWithCoordinates(newRow, newCol)){
-            timeouts.push(setTimeout(() => {
+            setTimeout(() => {
               document.getElementById(hashKey).style.backgroundColor = 'blue';
               setTimeout(() => {
                   document.getElementById(hashKey).style.backgroundColor = 'grey';
                 },100);
-              },count*speed));
+              },count*speed);
             count++;
           }
 
@@ -139,6 +138,8 @@ function PathFinder() {
                 r: newRow,
                 c: newCol
             });
+
+            // Todo: Need to implement efficient algorithm instead of sorting each time
             blocks.sort(function(x, y) {
               if (x.f < y.f) {
                 return -1;

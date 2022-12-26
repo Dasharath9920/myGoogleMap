@@ -23,7 +23,7 @@ function Sidebar() {
     const [alertType, setAlertType] = useState('info');
     const [showLoader, setShowLoader] = useState(false);
     const [showStepper, setShowStepper] = useState(false);
-    const [ShowResetButton, setShowResetButton] = useState(false);
+    const [showResetButton, setShowResetButton] = useState(false);
     const [activeStep, setActiveStep] = useState(1);
     const [alertVariant, setAlertVariant] = useState('filled');
 
@@ -361,7 +361,7 @@ function Sidebar() {
 
   const resetInputs = () => {
 
-    if(!ShowResetButton)
+    if(!showResetButton)
         return;
 
     setShowStepper(false);
@@ -494,7 +494,7 @@ function Sidebar() {
         <div className="parent-button-group">
             <button className={`button navigation-button ${disableNavigation && 'disable-button'}`} onClick={startNavigation}><DirectionsIcon className='location-icon'/> Start Navigation</button>
             <div className="button-group">
-                <button className={`button ${!ShowResetButton && 'disable-button'}`} onClick={resetInputs}>{myState.maxCities < 20? 'Reset': 'Reset Map'}</button>
+                <button className={`button ${!showResetButton && 'disable-button'}`} onClick={resetInputs}>{myState.maxCities < 20? 'Reset': 'Reset Map'}</button>
                 <button className={`button ${playNavigation && 'disable-button'}`} onClick={generateCities}>New Map</button>
             </div>
         </div>
